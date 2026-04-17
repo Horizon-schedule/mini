@@ -5,6 +5,40 @@
   flex-direction: column;
 }
 
+/* 顶部导航栏 */
+.nav-header {
+  display: flex;
+  align-items: center;
+  height: 88rpx;
+  background: #fff;
+  border-bottom: 1rpx solid #eee;
+  position: relative;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 88rpx;
+  height: 88rpx;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.back-icon-img {
+  width: 44rpx;
+  height: 44rpx;
+}
+
+.nav-title {
+  flex: 1;
+  text-align: center;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
 .category-layout {
   display: flex;
   flex: 1;
@@ -23,6 +57,15 @@
   color: #666;
   text-align: center;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.category-icon {
+  width: 48rpx;
+  height: 48rpx;
 }
 
 .category-nav-item.active {

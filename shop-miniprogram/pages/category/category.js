@@ -61,5 +61,17 @@ Page({
   goDetail(e) {
     const id = e.currentTarget.dataset.id;
     wx.navigateTo({ url: `/pages/product-detail/product-detail?id=${id}` });
+  },
+
+  /**
+   * 返回上一页
+   */
+  goBack() {
+    wx.navigateBack({
+      fail: () => {
+        // 如果没有上一页，跳转到首页
+        wx.switchTab({ url: '/pages/index/index' });
+      }
+    });
   }
 });

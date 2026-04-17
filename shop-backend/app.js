@@ -36,8 +36,9 @@ app.use(express.json({ limit: '10mb' }));
 // 解析 URL 编码请求体
 app.use(express.urlencoded({ extended: true }));
 
-// 静态文件服务（上传的图片、管理后台页面）
+// 静态文件服务（上传的图片、管理后台页面、分类图标）
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+app.use('/images', express.static(path.join(__dirname, 'public/images')));
 app.use('/admin', express.static(path.join(__dirname, 'public/admin')));
 
 // ============================================================

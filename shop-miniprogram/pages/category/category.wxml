@@ -1,5 +1,13 @@
 <!-- 分类页 -->
 <view class="page-category">
+  <!-- 顶部导航栏 -->
+  <view class="nav-header">
+    <view class="back-btn" bindtap="goBack">
+      <image class="back-icon-img" src="/images/icon-back.svg" mode="aspectFit"/>
+    </view>
+    <text class="nav-title">商品分类</text>
+  </view>
+  
   <view class="category-layout">
     <!-- 左侧分类列表 -->
     <scroll-view class="category-left" scroll-y>
@@ -9,6 +17,7 @@
         bindtap="selectCategory"
         data-index="{{index}}"
         data-item="{{item}}">
+        <image class="category-icon" src="{{item.icon}}" mode="aspectFit" wx:if="{{item.icon}}" />
         <text>{{item.name}}</text>
       </view>
     </scroll-view>
