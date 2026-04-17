@@ -46,7 +46,7 @@ Page({
     },
     // 店铺信息
     shop: {
-      name: '优选官方旗舰店',
+      name: "Don't stop",
       logo: 'https://picsum.photos/200/200?random=10',
       desc: '专注品质，用心服务',
       score: { desc: 4.9, service: 4.8, logistics: 4.9 },
