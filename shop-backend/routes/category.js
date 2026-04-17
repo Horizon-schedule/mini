@@ -14,7 +14,14 @@ router.get('/list', async (req, res) => {
     const [list] = await db.query(
       'SELECT * FROM category WHERE status = 1 ORDER BY sort_order ASC, id ASC'
     );
-    return res.success(list);
+    
+    // 将图标路径转换为小程序本地路径
+    const categories = list.map(item => ({
+      ...item,
+      icon: item.icon ? `/images/category/${item.icon.split('/').pop()}` : ''
+    }));
+    
+    return res.success(categories);
   } catch (err) {
     return res.fail('获取分类失败: ' + err.message);
   }
