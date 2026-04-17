@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 81 81">
+  <!-- 首页图标 (橙色) -->
+  <g id="home">
+    <path d="M40.5 15 L15 35 L20 35 L20 60 L32 60 L32 45 L49 45 L49 60 L61 60 L61 35 L66 35 Z" 
+          fill="none" stroke="#FF6B35" stroke-width="4" stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -1,0 +1,269 @@
+<!-- 商品详情页 -->
+<view class="page-detail" wx:if="{{product}}">
+  <!-- 商品图片轮播 -->
+  <swiper class="img-swiper" indicator-dots indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#FF6B35" autoplay circular>
+    <swiper-item wx:for="{{product.images}}" wx:key="*this">
+      <image class="detail-img" src="{{item}}" mode="aspectFill" bindtap="previewImage" data-current="{{item}}" />
+    </swiper-item>
+  </swiper>
+
+  <!-- 价格信息 -->
+  <view class="price-section">
+    <view class="price-row">
+      <text class="price"><text class="price-symbol">¥</text><text class="price-integer">{{product.price}}</text></text>
+      <text class="original-price" wx:if="{{product.original_price > 0}}">¥{{product.original_price}}</text>
+    </view>
+    <text class="sales-info">已售{{product.sales}}件 · 库存{{product.stock}}件</text>
+  </view>
+
+  <!-- 商品信息 -->
+  <view class="info-section card">
+    <text class="product-title">{{product.name}}</text>
+    <text class="product-subtitle" wx:if="{{product.subtitle}}">{{product.subtitle}}</text>
+  </view>
+
+  <!-- 发货信息 -->
+  <view class="delivery-section card">
+    <view class="delivery-item">
+      <text class="delivery-label">发货</text>
+      <text class="delivery-value">{{deliveryInfo.city}}发货</text>
+      <text class="delivery-tag">快递: {{deliveryInfo.express}}</text>
+    </view>
+    <view class="delivery-item" wx:if="{{deliveryInfo.promise}}">
+      <text class="delivery-label">承诺</text>
+      <view class="promise-tags">
+        <text class="promise-tag" wx:for="{{deliveryInfo.promise}}" wx:key="*this">{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 评价 -->
+  <view class="review-section card" bindtap="goReviews">
+    <view class="section-header">
+      <text class="section-title">商品评价 ({{reviews.total}})</text>
+      <text class="section-more">查看全部 ></text>
+    </view>
+    <view class="review-tags" wx:if="{{reviews.tags.length > 0}}">
+      <text class="review-tag {{item.active ? 'active' : ''}}" wx:for="{{reviews.tags}}" wx:key="name">{{item.name}} {{item.count}}</text>
+    </view>
+    <view class="review-list" wx:if="{{reviews.list.length > 0}}">
+      <view class="review-item" wx:for="{{reviews.list}}" wx:key="id">
+        <view class="review-user">
+          <image class="user-avatar" src="{{item.avatar}}" mode="aspectFill" />
+          <text class="user-name">{{item.nickname}}</text>
+          <view class="user-rating">
+            <text class="star" wx:for="{{5}}" wx:key="*this">{{index < item.rating ? '★' : '☆'}}</text>
+          </view>
+        </view>
+        <text class="review-content">{{item.content}}</text>
+        <text class="review-date">{{item.date}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 问大家 -->
+  <view class="qa-section card" bindtap="goQA">
+    <view class="section-header">
+      <text class="section-title">问大家 ({{qa.total}})</text>
+      <text class="section-more">查看全部 ></text>
+    </view>
+    <view class="qa-list" wx:if="{{qa.list.length > 0}}">
+      <view class="qa-item" wx:for="{{qa.list}}" wx:key="id">
+        <view class="qa-question">
+          <text class="qa-tag">问</text>
+          <text class="qa-text">{{item.question}}</text>
+        </view>
+        <view class="qa-answer" wx:if="{{item.answer}}">
+          <text class="qa-tag answer">答</text>
+          <text class="qa-text">{{item.answer}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="qa-btn" bindtap="askQuestion">我要提问</view>
+  </view>
+
+  <!-- 店铺信息 -->
+  <view class="shop-section card">
+    <view class="shop-header">
+      <image class="shop-logo" src="{{shop.logo}}" mode="aspectFill" />
+      <view class="shop-info">
+        <text class="shop-name">{{shop.name}}</text>
+        <text class="shop-desc">{{shop.desc}}</text>
+      </view>
+      <view class="shop-score">
+        <view class="score-item">
+          <text class="score-label">描述</text>
+          <text class="score-value {{shop.score.desc >= 4.8 ? 'high' : ''}}">{{shop.score.desc}}</text>
+        </view>
+        <view class="score-item">
+          <text class="score-label">服务</text>
+          <text class="score-value {{shop.score.service >= 4.8 ? 'high' : ''}}">{{shop.score.service}}</text>
+        </view>
+        <view class="score-item">
+          <text class="score-label">物流</text>
+          <text class="score-value {{shop.score.logistics >= 4.8 ? 'high' : ''}}">{{shop.score.logistics}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="shop-stats">
+      <view class="stat-item">
+        <text class="stat-value">{{shop.stats.goods}}</text>
+        <text class="stat-label">全部宝贝</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{shop.stats.new}}</text>
+        <text class="stat-label">上新</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{shop.stats.fans}}</text>
+        <text class="stat-label">粉丝数</text>
+      </view>
+    </view>
+    <view class="shop-actions">
+      <view class="shop-btn" bindtap="contactShop">
+        <text class="btn-icon">💬</text>
+        <text>联系客服</text>
+      </view>
+      <view class="shop-btn primary" bindtap="goShop">
+        <text class="btn-icon">🏪</text>
+        <text>进入店铺</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 店铺推荐 -->
+  <view class="recommend-section" wx:if="{{recommendList.length > 0}}">
+    <view class="recommend-header">
+      <text class="recommend-title">店铺推荐</text>
+    </view>
+    <view class="recommend-grid">
+      <view class="recommend-item" wx:for="{{recommendList}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+        <image class="recommend-img" src="{{item.cover}}" mode="aspectFill" />
+        <text class="recommend-name">{{item.name}}</text>
+        <view class="recommend-price">
+          <text class="price-symbol">¥</text>
+          <text class="price-value">{{item.price}}</text>
+        </view>
+        <text class="recommend-sales">已售{{item.sales}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 规格选择 -->
+  <view class="spec-section card" wx:if="{{product.spec_list.length > 0}}">
+    <view class="spec-group" wx:for="{{product.spec_list}}" wx:key="name" wx:for-item="spec">
+      <text class="spec-label">{{spec.name}}</text>
+      <view class="spec-options">
+        <view 
+          class="spec-option {{selectedSpec[index] === option ? 'selected' : ''}}"
+          wx:for="{{spec.options}}" wx:key="*this"
+          wx:for-item="option"
+          bindtap="selectSpec"
+          data-group="{{index}}"
+          data-value="{{option}}">
+          {{option}}
+        </view>
+      </view>
+    </view>
+    <text class="selected-spec-text" wx:if="{{specDesc}}">已选：{{specDesc}}</text>
+  </view>
+
+  <!-- 商品详情图片 -->
+  <view class="detail-images-section card">
+    <text class="detail-title">商品详情</text>
+    <view class="detail-images">
+      <image 
+        class="detail-img-item" 
+        wx:for="{{product.detail_images || product.images}}" 
+        wx:key="*this"
+        src="{{item}}" 
+        mode="widthFix" 
+        lazy-load />
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <view class="bar-icons">
+      <view class="bar-icon" bindtap="goHome">
+        <text class="iconfont">🏠</text>
+        <text>首页</text>
+      </view>
+      <view class="bar-icon" bindtap="goCart">
+        <text class="iconfont">🛒</text>
+        <text>购物车</text>
+        <view class="cart-badge" wx:if="{{cartCount > 0}}">{{cartCount}}</view>
+      </view>
+    </view>
+    <view class="bar-buttons">
+      <view class="btn-add-cart" bindtap="addToCart">加入购物车</view>
+      <view class="btn-buy-now" bindtap="buyNow">立即购买</view>
+    </view>
+  </view>
+
+  <!-- 规格选择弹窗 -->
+  <view class="spec-modal {{showSpecModal ? 'show' : ''}}" bindtap="hideSpecModal">
+    <view class="spec-modal-mask"></view>
+    <view class="spec-modal-content" catchtap="preventHide">
+      <!-- 关闭按钮 -->
+      <view class="modal-close" bindtap="hideSpecModal">×</view>
+      
+      <!-- 商品信息头部 -->
+      <view class="modal-header">
+        <image class="modal-img" src="{{product.images[0]}}" mode="aspectFill" />
+        <view class="modal-info">
+          <view class="modal-price">
+            <text class="price-symbol">¥</text>
+            <text class="price-value">{{product.price}}</text>
+          </view>
+          <view class="modal-stock">库存 {{product.stock}} 件</view>
+          <view class="modal-selected" wx:if="{{specDesc}}">已选：{{specDesc}}</view>
+          <view class="modal-selected" wx:else>请选择规格</view>
+        </view>
+      </view>
+
+      <!-- 规格选择区域 -->
+      <scroll-view class="modal-body" scroll-y>
+        <view class="spec-group" wx:for="{{product.spec_list}}" wx:key="name" wx:for-item="spec">
+          <text class="spec-label">{{spec.name}}</text>
+          <view class="spec-options">
+            <view 
+              class="spec-option {{selectedSpec[index] === option ? 'selected' : ''}}"
+              wx:for="{{spec.options}}" wx:key="*this"
+              wx:for-item="option"
+              bindtap="selectSpecModal"
+              data-group="{{index}}"
+              data-value="{{option}}">
+              {{option}}
+            </view>
+          </view>
+        </view>
+
+        <!-- 数量选择 -->
+        <view class="quantity-section">
+          <text class="quantity-label">数量</text>
+          <view class="quantity-selector">
+            <view class="quantity-btn {{quantity <= 1 ? 'disabled' : ''}}" bindtap="changeQuantity" data-delta="-1">-</view>
+            <input class="quantity-input" type="number" value="{{quantity}}" bindinput="onQuantityInput" />
+            <view class="quantity-btn" bindtap="changeQuantity" data-delta="1">+</view>
+          </view>
+        </view>
+
+        <!-- 配送信息 -->
+        <view class="delivery-modal-section">
+          <view class="delivery-modal-item">
+            <text class="delivery-modal-label">配送</text>
+            <text class="delivery-modal-value">{{deliveryInfo.city}}发货 · {{deliveryInfo.express}}</text>
+          </view>
+        </view>
+      </scroll-view>
+
+      <!-- 底部按钮 -->
+      <view class="modal-footer">
+        <view class="modal-btn {{actionType === 'cart' ? 'btn-cart' : 'btn-buy'}}" bindtap="confirmAction">
+          {{actionType === 'cart' ? '确定' : '立即购买'}}
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

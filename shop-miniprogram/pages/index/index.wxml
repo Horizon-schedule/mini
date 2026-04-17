@@ -1,0 +1,81 @@
+<!--
+  首页：搜索栏 + 轮播图 + 分类 + 热门商品
+-->
+<view class="page-index">
+  <!-- 搜索栏 -->
+  <view class="search-bar" bindtap="goSearch">
+    <view class="search-input">
+      <image class="search-icon" src="/images/icon-search.png" mode="aspectFit" />
+      <text class="search-placeholder">搜索商品</text>
+    </view>
+  </view>
+
+  <!-- 轮播图 -->
+  <swiper class="banner-swiper" indicator-dots indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#FF6B35" autoplay circular interval="4000" duration="500">
+    <swiper-item wx:for="{{banners}}" wx:key="id">
+      <image class="banner-img" src="{{item.image}}" mode="aspectFill" bindtap="onBannerTap" data-item="{{item}}" />
+    </swiper-item>
+  </swiper>
+
+  <!-- 商品分类 -->
+  <view class="category-section card" wx:if="{{categories.length > 0}}">
+    <view class="section-title">商品分类</view>
+    <scroll-view class="category-scroll" scroll-x>
+      <view class="category-list">
+        <view class="category-item" wx:for="{{categories}}" wx:key="id" bindtap="goCategory" data-item="{{item}}">
+          <view class="category-icon-wrap">
+            <image class="category-icon" src="{{item.icon}}" mode="aspectFit" />
+          </view>
+          <text class="category-name">{{item.name}}</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 热门推荐 -->
+  <view class="hot-section" wx:if="{{hotProducts.length > 0}}">
+    <view class="section-header">
+      <text class="section-title-tag">🔥</text>
+      <text class="section-title-text">热门推荐</text>
+    </view>
+    <scroll-view class="hot-scroll" scroll-x>
+      <view class="hot-list">
+        <view class="hot-item card" wx:for="{{hotProducts}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+          <image class="hot-img" src="{{item.cover}}" mode="aspectFill" />
+          <view class="hot-info">
+            <text class="hot-name text-ellipsis">{{item.name}}</text>
+            <view class="hot-bottom">
+              <text class="price"><text class="price-symbol">¥</text><text class="price-integer">{{item.price}}</text></text>
+              <text class="hot-sales">已售{{item.sales}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 新品上架 -->
+  <view class="new-section" wx:if="{{newProducts.length > 0}}">
+    <view class="section-header">
+      <text class="section-title-tag">✨</text>
+      <text class="section-title-text">新品上架</text>
+      <text class="section-more" bindtap="goProductList" data-type="new">查看更多 ></text>
+    </view>
+    <view class="product-grid">
+      <view class="product-item card" wx:for="{{newProducts}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+        <image class="product-img" src="{{item.cover}}" mode="aspectFill" />
+        <view class="product-info">
+          <text class="product-name text-ellipsis-2">{{item.name}}</text>
+          <view class="product-bottom">
+            <view class="price">
+              <text class="price-symbol">¥</text>
+              <text class="price-integer">{{item.price}}</text>
+            </view>
+            <text class="original-price" wx:if="{{item.original_price > 0}}">¥{{item.original_price}}</text>
+          </view>
+          <text class="product-sales">已售{{item.sales || 0}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

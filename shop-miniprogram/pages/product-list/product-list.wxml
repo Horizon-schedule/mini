@@ -1,0 +1,36 @@
+<!-- 商品列表页 -->
+<view class="page-product-list">
+  <!-- 排序栏 -->
+  <view class="sort-bar">
+    <view class="sort-item {{sort === '' ? 'active' : ''}}" bindtap="setSort" data-sort="">综合</view>
+    <view class="sort-item {{sort === 'sales' ? 'active' : ''}}" bindtap="setSort" data-sort="sales">销量</view>
+    <view class="sort-item {{sort === 'price_asc' ? 'active' : ''}}" bindtap="setSort" data-sort="price_asc">
+      价格
+      <text wx:if="{{sort === 'price_asc'}}">↑</text>
+      <text wx:elif="{{sort === 'price_desc'}}">↓</text>
+    </view>
+    <view class="sort-item {{sort === 'new' ? 'active' : ''}}" bindtap="setSort" data-sort="new">最新</view>
+  </view>
+
+  <!-- 商品列表 -->
+  <scroll-view class="product-scroll" scroll-y bindscrolltolower="loadMore">
+    <view class="product-grid">
+      <view class="product-item card" wx:for="{{list}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+        <image class="product-img" src="{{item.cover}}" mode="aspectFill" />
+        <view class="product-info">
+          <text class="product-name text-ellipsis-2">{{item.name}}</text>
+          <view class="product-bottom">
+            <text class="price"><text class="price-symbol">¥</text><text class="price-integer">{{item.price}}</text></text>
+            <text class="original-price" wx:if="{{item.original_price > 0}}">¥{{item.original_price}}</text>
+          </view>
+          <text class="product-sales">已售{{item.sales}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="load-more" wx:if="{{loading}}">加载中...</view>
+    <view class="load-more" wx:if="{{noMore && list.length > 0}}">没有更多了</view>
+    <view class="empty-state" wx:if="{{list.length === 0 && !loading}}">
+      <text>暂无商品</text>
+    </view>
+  </scroll-view>
+</view>

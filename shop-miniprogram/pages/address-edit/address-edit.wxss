@@ -1,0 +1,18 @@
+.page-address-edit { padding: 20rpx; background: #f5f5f5; }
+
+.form-card { padding: 10rpx 30rpx; }
+.form-item { display: flex; align-items: center; padding: 24rpx 0; border-bottom: 1rpx solid #f5f5f5; }
+.form-item:last-child { border-bottom: none; }
+.form-label { width: 160rpx; font-size: 28rpx; color: #333; flex-shrink: 0; }
+.form-input { flex: 1; font-size: 28rpx; }
+.form-value { flex: 1; font-size: 28rpx; color: #333; }
+.form-value.placeholder { color: #ccc; }
+.form-arrow { color: #ccc; font-size: 28rpx; margin-left: 16rpx; }
+
+.default-row { display: flex; justify-content: space-between; align-items: center; padding: 30rpx; font-size: 28rpx; margin-top: 20rpx; }
+.switch { width: 80rpx; height: 44rpx; border-radius: 22rpx; background: #ddd; position: relative; }
+.switch.on { background: #FF6B35; }
+.switch-dot { width: 36rpx; height: 36rpx; border-radius: 50%; background: #fff; position: absolute; top: 4rpx; left: 4rpx; transition: left 0.2s; }
+.switch.on .switch-dot { left: 40rpx; }
+
+.save-btn { margin-top: 40rpx; height: 80rpx; line-height: 80rpx; text-align: center; background: linear-gradient(135deg, #FF6B35, #FF8C5A); color: #fff; border-radius: 40rpx; font-size: 30rpx; }

@@ -1,0 +1,52 @@
+<!-- 购物车页 -->
+<view class="page-cart">
+  <view class="cart-list" wx:if="{{cartList.length > 0}}">
+    <!-- 购物车商品 -->
+    <view class="cart-item card" wx:for="{{cartList}}" wx:key="id">
+      <view class="cart-check" bindtap="toggleCheck" data-index="{{index}}">
+        <view class="checkbox {{item.checked ? 'checked' : ''}}">
+          <text wx:if="{{item.checked}}">✓</text>
+        </view>
+      </view>
+      <image class="cart-img" src="{{item.cover}}" mode="aspectFill" bindtap="goDetail" data-id="{{item.product_id}}" />
+      <view class="cart-info">
+        <text class="cart-name text-ellipsis-2" bindtap="goDetail" data-id="{{item.product_id}}">{{item.name}}</text>
+        <text class="cart-spec" wx:if="{{item.spec_name}}">{{item.spec_name}}</text>
+        <view class="cart-bottom">
+          <text class="price"><text class="price-symbol">¥</text>{{item.price}}</text>
+          <view class="quantity-control">
+            <view class="qty-btn" bindtap="changeQty" data-index="{{index}}" data-type="minus">-</view>
+            <text class="qty-num">{{item.quantity}}</text>
+            <view class="qty-btn" bindtap="changeQty" data-index="{{index}}" data-type="plus">+</view>
+          </view>
+        </view>
+      </view>
+      <view class="cart-delete" bindtap="deleteItem" data-index="{{index}}">
+        <text>×</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{cartList.length === 0 && !loading}}">
+    <text>🛒</text>
+    <text>购物车空空如也</text>
+    <navigator class="go-shop" open-type="switchTab" url="/pages/index/index">去逛逛</navigator>
+  </view>
+
+  <!-- 底部结算栏 -->
+  <view class="cart-bottom-bar" wx:if="{{cartList.length > 0}}">
+    <view class="select-all" bindtap="toggleAll">
+      <view class="checkbox {{allChecked ? 'checked' : ''}}">
+        <text wx:if="{{allChecked}}">✓</text>
+      </view>
+      <text>全选</text>
+    </view>
+    <view class="cart-total">
+      <text>合计：<text class="price"><text class="price-symbol">¥</text><text class="price-integer">{{totalPrice}}</text></text></text>
+    </view>
+    <view class="settle-btn {{checkedCount > 0 ? '' : 'disabled'}}" bindtap="goSettle">
+      结算({{checkedCount}})
+    </view>
+  </view>
+</view>

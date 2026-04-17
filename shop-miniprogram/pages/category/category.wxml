@@ -1,0 +1,35 @@
+<!-- 分类页 -->
+<view class="page-category">
+  <view class="category-layout">
+    <!-- 左侧分类列表 -->
+    <scroll-view class="category-left" scroll-y>
+      <view 
+        class="category-nav-item {{activeIndex === index ? 'active' : ''}}"
+        wx:for="{{categories}}" wx:key="id"
+        bindtap="selectCategory"
+        data-index="{{index}}"
+        data-item="{{item}}">
+        <text>{{item.name}}</text>
+      </view>
+    </scroll-view>
+
+    <!-- 右侧商品列表 -->
+    <scroll-view class="category-right" scroll-y scroll-into-view="category-{{activeIndex}}">
+      <view class="category-products">
+        <view class="product-item" wx:for="{{products}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+          <image class="product-img" src="{{item.cover}}" mode="aspectFill" />
+          <view class="product-info">
+            <text class="product-name text-ellipsis-2">{{item.name}}</text>
+            <view class="product-bottom">
+              <text class="price"><text class="price-symbol">¥</text><text class="price-integer">{{item.price}}</text></text>
+              <text class="product-sales">已售{{item.sales}}</text>
+            </view>
+          </view>
+        </view>
+        <view class="empty-state" wx:if="{{products.length === 0 && loaded}}">
+          <text>该分类暂无商品</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>
