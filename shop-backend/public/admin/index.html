@@ -413,6 +413,15 @@ async function api(method, url, data = {}) {
   };
   if (method !== 'GET') opts.body = JSON.stringify(data);
   const res = await fetch(API_BASE + url, opts);
+  
+  // 检查响应内容类型
+  const contentType = res.headers.get('content-type');
+  if (!contentType || !contentType.includes('application/json')) {
+    const text = await res.text();
+    console.error('服务器返回非JSON响应:', text.substring(0, 200));
+    throw new Error('服务器错误，请检查后端服务是否正常运行');
+  }
+  
   const json = await res.json();
   if (json.code === 401) { doLogout(); throw new Error('登录过期'); }
   if (json.code !== 200) { showToast(json.msg || '操作失败', 'error'); throw new Error(json.msg); }
@@ -504,8 +513,9 @@ async function handleImageUpload(input, type) {
   formData.append('image', file);
   
   try {
-    const res = await fetch('/api/upload', {
+    const res = await fetch('/api/upload/image', {
       method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token },
       body: formData
     });
     const data = await res.json();
