@@ -294,34 +294,63 @@ Page({
    * 查看全部评价
    */
   goReviews() {
-    wx.showToast({ title: '查看全部评价', icon: 'none' });
+    const { id } = this.data;
+    wx.navigateTo({
+      url: `/pages/review-list/review-list?productId=${id}`
+    });
   },
 
   /**
    * 查看全部问答
    */
   goQA() {
-    wx.showToast({ title: '查看全部问答', icon: 'none' });
+    const { id } = this.data;
+    wx.navigateTo({
+      url: `/pages/question-list/question-list?productId=${id}`
+    });
   },
 
   /**
    * 提问
    */
   askQuestion() {
-    wx.showToast({ title: '打开提问页面', icon: 'none' });
+    const { id } = this.data;
+    wx.navigateTo({
+      url: `/pages/question-list/question-list?productId=${id}`
+    });
   },
 
   /**
    * 联系客服
    */
   contactShop() {
-    wx.showToast({ title: '联系客服', icon: 'none' });
+    const productInfo = {
+      id: this.data.id,
+      name: this.data.product.name,
+      cover: this.data.product.cover,
+      price: this.data.product.price
+    };
+    wx.navigateTo({
+      url: `/pages/chat/chat?product=${encodeURIComponent(JSON.stringify(productInfo))}`
+    });
   },
 
   /**
-   * 进入店铺
+   * 进入店铺（跳转到首页）
    */
   goShop() {
-    wx.showToast({ title: '进入店铺', icon: 'none' });
+    wx.switchTab({ url: '/pages/index/index' });
+  },
+
+  /**
+   * 查看商品详情
+   */
+  goDetail(e) {
+    const id = e.currentTarget.dataset.id;
+    if (id) {
+      wx.navigateTo({
+        url: `/pages/product-detail/product-detail?id=${id}`
+      });
+    }
   }
 });

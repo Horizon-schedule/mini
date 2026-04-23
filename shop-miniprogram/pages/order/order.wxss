@@ -21,4 +21,4 @@
 .order-actions { display: flex; }
 .action-btn { padding: 8rpx 24rpx; font-size: 24rpx; border-radius: 30rpx; margin-left: 16rpx; }
 .action-btn.outline { border: 2rpx solid #ddd; color: #666; }
-.action-btn.primary { background: #FF6B35; color: #fff; }
+.action-btn.primary { background: #5DADE2; color: #fff; }

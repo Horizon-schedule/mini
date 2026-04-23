@@ -4,7 +4,7 @@
 .address-row { display: flex; align-items: center; margin-bottom: 10rpx; }
 .name { font-size: 30rpx; font-weight: bold; margin-right: 16rpx; }
 .phone { font-size: 28rpx; color: #666; }
-.default-tag { background: #FF6B35; color: #fff; font-size: 20rpx; padding: 4rpx 12rpx; border-radius: 4rpx; margin-left: 16rpx; }
+.default-tag { background: #5DADE2; color: #fff; font-size: 20rpx; padding: 4rpx 12rpx; border-radius: 4rpx; margin-left: 16rpx; }
 .address-text { font-size: 26rpx; color: #666; line-height: 1.5; }
 
 .address-actions { display: flex; justify-content: flex-end; padding-top: 16rpx; border-top: 1rpx solid #f5f5f5; margin-top: 16rpx; }

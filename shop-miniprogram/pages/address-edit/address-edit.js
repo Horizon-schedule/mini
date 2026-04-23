@@ -10,10 +10,13 @@ Page({
   onLoad(options) {
     if (options.id) {
       this.setData({ id: options.id, isEdit: true });
+      wx.setNavigationBarTitle({ title: '编辑地址' });
       try {
         const data = JSON.parse(decodeURIComponent(options.data));
         this.setData({ form: { ...this.data.form, ...data } });
       } catch (err) { /* */ }
+    } else {
+      wx.setNavigationBarTitle({ title: '新增地址' });
     }
   },
 
@@ -43,12 +46,8 @@ Page({
         });
       },
       fail: (err) => {
-        if (err.errMsg.includes('auth deny')) {
-          wx.showModal({
-            title: '提示', content: '需要授权获取您的地址信息',
-            success: (mr) => { if (mr.confirm) wx.openSetting(); }
-          });
-        }
+        // 不做任何提示，用户可以手动输入
+        console.log('chooseAddress fail:', err.errMsg);
       }
     });
   },
@@ -60,20 +59,26 @@ Page({
     const { form, isEdit, id } = this.data;
     if (!form.name) { wx.showToast({ title: '请输入收货人', icon: 'none' }); return; }
     if (!form.phone || form.phone.length !== 11) { wx.showToast({ title: '请输入正确手机号', icon: 'none' }); return; }
+    if (!form.province || !form.city) { wx.showToast({ title: '请选择省市区', icon: 'none' }); return; }
     if (!form.detail) { wx.showToast({ title: '请输入详细地址', icon: 'none' }); return; }
 
     wx.showLoading({ title: '保存中...' });
     try {
+      const saveData = {
+        ...form,
+        is_default: form.is_default ? 1 : 0
+      };
       if (isEdit) {
-        await put('/address/update', { id, ...form }, true);
+        await put('/address/update', { id, ...saveData }, true);
       } else {
-        await post('/address/add', form, true);
+        await post('/address/save', saveData, true);
       }
       wx.hideLoading();
       wx.showToast({ title: '保存成功', icon: 'success' });
       setTimeout(() => wx.navigateBack(), 1500);
     } catch (err) {
       wx.hideLoading();
+      wx.showToast({ title: '保存失败', icon: 'none' });
     }
   }
 });

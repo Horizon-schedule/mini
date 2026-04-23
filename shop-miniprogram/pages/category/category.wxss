@@ -70,7 +70,7 @@
 
 .category-nav-item.active {
   background: #fff;
-  color: #FF6B35;
+  color: #5DADE2;
   font-weight: bold;
 }
 
@@ -82,7 +82,7 @@
   transform: translateY(-50%);
   width: 6rpx;
   height: 40rpx;
-  background: #FF6B35;
+  background: #5DADE2;
   border-radius: 0 4rpx 4rpx 0;
 }
 

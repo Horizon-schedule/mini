@@ -11,8 +11,14 @@
     </view>
     <view class="form-item" bindtap="chooseAddress">
       <text class="form-label">所在地区</text>
-      <text class="form-value {{form.province ? '' : 'placeholder'}}">{{form.province ? form.province + ' ' + form.city + ' ' + form.district : '点击获取微信地址或手动填写'}}</text>
+      <text class="form-value {{form.province ? '' : 'placeholder'}}">{{form.province ? form.province + ' ' + form.city + ' ' + form.district : '点击获取微信地址'}}</text>
       <text class="form-arrow">></text>
+    </view>
+    <!-- 手动输入地区（备用） -->
+    <view class="form-item manual-region" wx:if="{{!form.province}}">
+      <input class="form-input small" placeholder="省" value="{{form.province}}" bindinput="onInput" data-field="province" />
+      <input class="form-input small" placeholder="市" value="{{form.city}}" bindinput="onInput" data-field="city" />
+      <input class="form-input small" placeholder="区/县" value="{{form.district}}" bindinput="onInput" data-field="district" />
     </view>
     <view class="form-item">
       <text class="form-label">详细地址</text>

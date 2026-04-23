@@ -10,7 +10,10 @@
     "pages/address-list/address-list",
     "pages/address-edit/address-edit",
     "pages/profile/profile",
-    "pages/search/search"
+    "pages/search/search",
+    "pages/chat/chat",
+    "pages/review-list/review-list",
+    "pages/question-list/question-list"
   ],
   "window": {
     "backgroundTextStyle": "light",

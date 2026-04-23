@@ -1,0 +1,63 @@
+<!-- 商品问答列表页 -->
+<view class="page-question-list">
+  <!-- 商品信息 -->
+  <view class="product-card card" wx:if="{{product}}">
+    <image class="product-cover" src="{{product.cover}}" mode="aspectFill"></image>
+    <view class="product-info">
+      <text class="product-name">{{product.name}}</text>
+      <text class="product-price">¥{{product.price}}</text>
+    </view>
+  </view>
+
+  <!-- 提问按钮 -->
+  <view class="ask-btn-bar">
+    <view class="ask-btn" bindtap="showAskModal">我要提问</view>
+  </view>
+
+  <!-- 问答列表 -->
+  <view class="question-list">
+    <view class="question-item card" wx:for="{{questions}}" wx:key="id">
+      <view class="q-header">
+        <text class="q-icon">问</text>
+        <text class="q-text">{{item.question}}</text>
+      </view>
+      <view class="a-header" wx:if="{{item.answer}}">
+        <text class="a-icon">答</text>
+        <text class="a-text">{{item.answer}}</text>
+      </view>
+      <view class="q-time" wx:if="{{item.time}}">{{item.time}}</view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-more" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+  <view class="no-more" wx:if="{{!hasMore && questions.length > 0}}">
+    <text>没有更多了</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{questions.length === 0 && !loading}}">
+    <text>暂无问答，快来提问吧</text>
+  </view>
+</view>
+
+<!-- 提问弹窗 -->
+<view class="ask-modal-overlay" wx:if="{{showAskModal}}" bindtap="hideAskModal">
+  <view class="ask-modal card" catchtap="preventHide">
+    <view class="ask-modal-header">
+      <text>提问</text>
+      <text class="close-btn" bindtap="hideAskModal">×</text>
+    </view>
+    <textarea 
+      class="ask-input" 
+      placeholder="请输入您的问题..." 
+      value="{{askContent}}"
+      bindinput="onAskInput"
+      maxlength="200"
+    ></textarea>
+    <view class="ask-tip">提问审核通过后会在24小时内回复</view>
+    <view class="ask-submit" bindtap="submitQuestion">提交问题</view>
+  </view>
+</view>

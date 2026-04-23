@@ -33,4 +33,4 @@
 .bottom-actions { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: flex-end; padding: 20rpx 30rpx; background: #fff; box-shadow: 0 -2rpx 10rpx rgba(0,0,0,0.05); }
 .action-btn { padding: 16rpx 40rpx; font-size: 28rpx; border-radius: 40rpx; margin-left: 20rpx; }
 .action-btn.outline { border: 2rpx solid #ddd; color: #666; }
-.action-btn.primary { background: #FF6B35; color: #fff; }
+.action-btn.primary { background: #5DADE2; color: #fff; }

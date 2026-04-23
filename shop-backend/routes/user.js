@@ -82,6 +82,61 @@ router.post('/login', async (req, res) => {
 });
 
 /**
+ * 手机号登录（开发环境使用模拟手机号）
+ * POST /api/user/login-phone
+ */
+router.post('/login-phone', async (req, res) => {
+  try {
+    const { code, phoneCode } = req.body;
+
+    if (!code) {
+      return res.fail('缺少登录凭证code');
+    }
+
+    // 开发环境：使用模拟手机号
+    const isDev = process.env.NODE_ENV === 'development' || !process.env.WX_APPID || process.env.WX_APPID === 'wx0000000000000000';
+    
+    if (isDev) {
+      // 开发环境：使用 code 模拟手机号
+      const mockPhone = `1380000${String(code).slice(-4).padStart(4, '0')}`;
+      const mockOpenid = `phone_dev_${mockPhone}_${Date.now()}`;
+      
+      // 查找或创建用户
+      const [existingUsers] = await db.query('SELECT * FROM user WHERE phone = ?', [mockPhone]);
+      
+      if (existingUsers.length > 0) {
+        const user = existingUsers[0];
+        const token = generateUserToken({ id: user.id, openid: user.openid });
+        return res.success({
+          token,
+          userInfo: { id: user.id, nickname: user.nickname, avatar: user.avatar, phone: user.phone }
+        });
+      }
+      
+      // 创建新用户
+      const [result] = await db.query(
+        'INSERT INTO user (openid, phone, nickname, avatar) VALUES (?, ?, ?, ?)',
+        [mockOpenid, mockPhone, `用户${mockPhone.slice(-4)}`, '']
+      );
+      
+      const token = generateUserToken({ id: result.insertId, openid: mockOpenid });
+      return res.success({
+        token,
+        userInfo: { id: result.insertId, nickname: `用户${mockPhone.slice(-4)}`, avatar: '', phone: mockPhone }
+      });
+    }
+
+    // 正式环境：需要调用微信接口获取真实手机号
+    // 由于获取手机号需要 access_token，这里暂时返回失败提示
+    return res.fail('手机号登录需要在微信后台配置，请联系管理员');
+
+  } catch (err) {
+    console.error('手机号登录失败:', err);
+    return res.fail('登录失败: ' + err.message);
+  }
+});
+
+/**
  * 获取用户信息
  */
 router.get('/info', auth, async (req, res) => {
@@ -170,5 +225,27 @@ function generateUserToken(payload) {
     { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
   );
 }
+
+/**
+ * 获取指定用户信息（管理员接口）
+ * GET /api/user/:id/info
+ */
+router.get('/:id/info', async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const [users] = await db.query(
+      'SELECT id, nickname, avatar, phone, gender, created_at FROM user WHERE id = ?',
+      [userId]
+    );
+    
+    if (users.length === 0) {
+      return res.fail('用户不存在', 404);
+    }
+    
+    return res.success(users[0]);
+  } catch (err) {
+    return res.fail('获取用户信息失败: ' + err.message);
+  }
+});
 
 module.exports = router;

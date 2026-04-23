@@ -20,7 +20,7 @@
 .spec-label { font-size: 28rpx; color: #666; display: block; margin-bottom: 16rpx; }
 .spec-options { display: flex; flex-wrap: wrap; }
 .spec-option { padding: 12rpx 28rpx; border: 2rpx solid #ddd; border-radius: 8rpx; font-size: 26rpx; margin-right: 16rpx; margin-bottom: 16rpx; }
-.spec-option.selected { border-color: #FF6B35; color: #FF6B35; background: #FFF5F0; }
+.spec-option.selected { border-color: #5DADE2; color: #5DADE2; background: #E3F2FD; }
 .selected-spec-text { font-size: 24rpx; color: #999; display: block; margin-top: 10rpx; }
 
 /* 商品详情图片区域 */
@@ -109,8 +109,8 @@
   margin-bottom: 16rpx;
 }
 .review-tag.active {
-  color: #FF6B35;
-  background: #FFF5F0;
+  color: #5DADE2;
+  background: #E3F2FD;
 }
 .review-list { }
 .review-item {
@@ -170,7 +170,7 @@
 .qa-tag {
   font-size: 22rpx;
   color: #fff;
-  background: #FF6B35;
+  background: #5DADE2;
   padding: 4rpx 10rpx;
   border-radius: 8rpx;
   margin-right: 12rpx;
@@ -188,9 +188,9 @@
 .qa-btn {
   text-align: center;
   font-size: 28rpx;
-  color: #FF6B35;
+  color: #5DADE2;
   padding: 20rpx;
-  border: 2rpx solid #FF6B35;
+  border: 2rpx solid #5DADE2;
   border-radius: 32rpx;
   margin-top: 10rpx;
 }
@@ -563,5 +563,5 @@
   background: linear-gradient(135deg, #FFB347, #FFCC33);
 }
 .modal-btn.btn-buy {
-  background: linear-gradient(135deg, #FF6B35, #FF8C5A);
+  background: linear-gradient(135deg, #5DADE2, #85C1E9);
 }

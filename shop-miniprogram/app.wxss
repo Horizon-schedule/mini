@@ -18,11 +18,11 @@ page {
 
 /* 主色调 */
 .primary-color {
-  color: #FF6B35;
+  color: #5DADE2;
 }
 
 .primary-bg {
-  background-color: #FF6B35;
+  background-color: #5DADE2;
 }
 
 /* 价格样式 */
@@ -52,7 +52,7 @@ page {
 
 /* 按钮样式 */
 .btn-primary {
-  background: linear-gradient(135deg, #FF6B35, #FF8C5A);
+  background: linear-gradient(135deg, #5DADE2, #85C1E9);
   color: #fff;
   border-radius: 40rpx;
   height: 80rpx;
@@ -68,8 +68,8 @@ page {
 
 .btn-outline {
   background: #fff;
-  color: #FF6B35;
-  border: 2rpx solid #FF6B35;
+  color: #5DADE2;
+  border: 2rpx solid #5DADE2;
   border-radius: 40rpx;
   height: 80rpx;
   line-height: 76rpx;

@@ -1,5 +1,6 @@
 {
     "recommendations": [
-        "cweijan.vscode-mysql-client2"
+        "cweijan.vscode-mysql-client2",
+        "redhat.vscode-yaml"
     ]
 }

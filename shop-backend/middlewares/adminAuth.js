@@ -1,6 +1,7 @@
 /**
  * 管理员Token验证中间件
  * 与用户Token共用 JWT，通过 req.user.type 区分身份
+ * 允许 admin 或 service 类型的管理员访问
  */
 const jwt = require('jsonwebtoken');
 
@@ -13,8 +14,8 @@ const adminAuthMiddleware = (req, res, next) => {
   const token = authHeader.substring(7);
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    // 管理员token必须携带 type='admin'
-    if (decoded.type !== 'admin') {
+    // 管理员token必须携带 type='admin' 或 'service'
+    if (decoded.type !== 'admin' && decoded.type !== 'service') {
       return res.fail('无管理员权限', 403);
     }
     req.admin = decoded; // { id, username, type }

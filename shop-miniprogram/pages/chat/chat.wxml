@@ -1,0 +1,69 @@
+<!-- 客服聊天页面 -->
+<view class="page-chat">
+  <!-- 商品卡片（如果有） -->
+  <view class="product-card" wx:if="{{product && showProductCard}}" bindtap="goProductDetail">
+    <image class="product-img" src="{{product.cover}}" mode="aspectFill" />
+    <view class="product-info">
+      <text class="product-name">{{product.name}}</text>
+      <text class="product-price">¥{{product.price}}</text>
+    </view>
+    <view class="product-card-actions">
+      <text class="view-btn">查看商品</text>
+      <view class="close-btn" bindtap="closeProductCard">✕</view>
+    </view>
+  </view>
+
+  <!-- 消息列表 -->
+  <scroll-view class="message-list" scroll-y scroll-into-view="msg-{{messages.length-1}}">
+    <view class="message-item {{item.type}}" wx:for="{{messages}}" wx:key="id" id="msg-{{index}}">
+      <!-- 时间 -->
+      <view class="msg-time" wx:if="{{item.showTime}}">{{item.time}}</view>
+      
+      <!-- 客服消息 -->
+      <view class="msg-content" wx:if="{{item.type === 'service'}}">
+        <image class="avatar" src="{{item.adminAvatar || '/images/service-avatar.png'}}" mode="aspectFill" />
+        <view class="msg-bubble">
+          <text wx:if="{{item.contentType === 'text'}}">{{item.content}}</text>
+          <image wx:if="{{item.contentType === 'image'}}" src="{{item.content}}" mode="widthFix" bindtap="previewImage" data-url="{{item.content}}" />
+          <!-- 商品卡片 -->
+          <view wx:if="{{item.contentType === 'product'}}" class="chat-product-card" bindtap="goProductDetail" data-product="{{item.extraData}}">
+            <image class="chat-product-img" src="{{item.extraData.cover}}" mode="aspectFill" />
+            <view class="chat-product-info">
+              <text class="chat-product-name">{{item.extraData.name}}</text>
+              <text class="chat-product-price">¥{{item.extraData.price}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 用户消息 -->
+      <view class="msg-content user" wx:if="{{item.type === 'user'}}">
+        <view class="msg-bubble">
+          <text wx:if="{{item.contentType === 'text'}}">{{item.content}}</text>
+          <image wx:if="{{item.contentType === 'image'}}" src="{{item.content}}" mode="widthFix" bindtap="previewImage" data-url="{{item.content}}" />
+        </view>
+        <image class="avatar" src="{{item.userAvatar || userInfo.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 底部输入框 -->
+  <view class="input-bar">
+    <view class="input-wrap">
+      <textarea 
+        class="msg-input" 
+        value="{{inputValue}}" 
+        placeholder="请输入消息..." 
+        bindinput="onInput"
+        confirm-type="send"
+        bindconfirm="sendMessage"
+        fixed="true"
+        cursor-spacing="20"
+        show-confirm-bar="{{false}}"
+        auto-height
+        maxlength="500"
+      />
+    </view>
+    <view class="btn-send" bindtap="sendMessage">发送</view>
+  </view>
+</view>

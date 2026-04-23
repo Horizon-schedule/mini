@@ -14,51 +14,6 @@ const jwt = require('jsonwebtoken');
 const db = require('../config/db');
 const adminAuth = require('../middlewares/adminAuth');
 const { parsePagination, hashPassword, verifyPassword } = require('../utils/index');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
-
-// 配置上传目录
-const uploadDir = path.join(__dirname, '../public/uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-// 配置 multer 存储
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadDir),
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
-const upload = multer({ 
-  storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
-      cb(null, true);
-    } else {
-      cb(new Error('只允许上传图片文件'));
-    }
-  }
-});
-
-/**
- * 图片上传接口
- */
-router.post('/upload', adminAuth, upload.single('image'), (req, res) => {
-  try {
-    if (!req.file) {
-      return res.fail('请上传图片文件');
-    }
-    const url = `/uploads/${req.file.filename}`;
-    return res.success({ url });
-  } catch (err) {
-    return res.fail('上传失败: ' + err.message);
-  }
-});
 
 /**
  * 管理员登录
@@ -101,7 +56,113 @@ router.post('/login', async (req, res) => {
         id: admin.id,
         username: admin.username,
         nickname: admin.nickname,
-        avatar: admin.avatar
+        avatar: admin.avatar,
+        role: admin.role
+      }
+    });
+  } catch (err) {
+    return res.fail('登录失败: ' + err.message);
+  }
+});
+
+/**
+ * 客服登录（需要超级管理员授权）
+ * POST /api/admin/service-login
+ * 参数：superAdmin（超级管理员用户名）, subUsername（子账号用户名）, subPassword（子账号密码）
+ */
+router.post('/service-login', async (req, res) => {
+  try {
+    const { superAdmin, subUsername, subPassword } = req.body;
+
+    if (!superAdmin || !subUsername || !subPassword) {
+      return res.fail('请填写完整信息');
+    }
+
+    // 1. 验证超级管理员账号
+    const [superAdmins] = await db.query(
+      'SELECT * FROM admin WHERE username = ? AND role = ?',
+      [superAdmin, 'super']
+    );
+
+    if (superAdmins.length === 0) {
+      return res.fail('超级管理员账号不存在');
+    }
+
+    const superAdminInfo = superAdmins[0];
+
+    // 2. 查找子账号
+    const [subAdmins] = await db.query(
+      'SELECT a.*, pg.name as permission_group_name, pg.permissions as permission_group_permissions FROM admin a LEFT JOIN permission_group pg ON a.permission_group_id = pg.id WHERE a.username = ? AND a.role = ?',
+      [subUsername, 'service']
+    );
+
+    if (subAdmins.length === 0) {
+      return res.fail('子账号不存在或角色不是客服');
+    }
+
+    const subAdmin = subAdmins[0];
+
+    // 3. 验证子账号密码
+    const isValid = await verifyPassword(subPassword, subAdmin.password);
+    if (!isValid) {
+      return res.fail('子账号密码错误');
+    }
+
+    // 4. 验证子账号是否启用
+    if (!subAdmin.status) {
+      return res.fail('该子账号已被禁用');
+    }
+
+    // 5. 获取权限组权限（兼容JSON数组和逗号分隔字符串）
+    let permissions = [];
+    if (subAdmin.permission_group_permissions) {
+      const permStr = subAdmin.permission_group_permissions.toString().trim();
+      if (permStr.startsWith('[')) {
+        // JSON数组格式
+        try {
+          permissions = JSON.parse(permStr);
+        } catch (e) {
+          permissions = [];
+        }
+      } else {
+        // 逗号分隔字符串格式
+        permissions = permStr.split(',').map(p => p.trim()).filter(p => p);
+      }
+    }
+
+    // 6. 生成子账号的 Token
+    const token = jwt.sign(
+      { 
+        id: subAdmin.id, 
+        username: subAdmin.username, 
+        type: 'service',
+        permission_group_id: subAdmin.permission_group_id 
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+    );
+
+    return res.success({
+      token,
+      adminInfo: {
+        id: subAdmin.id,
+        username: subAdmin.username,
+        nickname: subAdmin.nickname,
+        avatar: subAdmin.avatar,
+        email: subAdmin.email,
+        phone: subAdmin.phone,
+        wechat: subAdmin.wechat,
+        signature: subAdmin.signature,
+        status: subAdmin.status,
+        service_status: subAdmin.service_status || 'online',
+        role: subAdmin.role,
+        permission_group_id: subAdmin.permission_group_id,
+        permission_group_name: subAdmin.permission_group_name || null
+      },
+      permissions: permissions,
+      superAdmin: {
+        id: superAdminInfo.id,
+        username: superAdminInfo.username
       }
     });
   } catch (err) {
@@ -115,7 +176,7 @@ router.post('/login', async (req, res) => {
 router.get('/info', adminAuth, async (req, res) => {
   try {
     const [admins] = await db.query(
-      'SELECT id, username, nickname, avatar, created_at FROM admin WHERE id = ?',
+      'SELECT id, username, nickname, avatar, email, phone, wechat, signature, status, service_status, role, created_at FROM admin WHERE id = ?',
       [req.admin.id]
     );
     if (admins.length === 0) return res.fail('管理员不存在', 404);
@@ -220,7 +281,7 @@ router.get('/product/list', adminAuth, async (req, res) => {
  */
 router.post('/product/save', adminAuth, async (req, res) => {
   try {
-    const { id, name, subtitle, cover, images, detail_images, category_id, price, original_price, stock, spec_list, is_hot, is_new, status, sort_order } = req.body;
+    const { id, name, subtitle, cover, images, detail, category_id, price, original_price, stock, spec_list, is_hot, is_new, status, sort_order } = req.body;
 
     if (!name) return res.fail('商品名称不能为空');
     if (!category_id) return res.fail('请选择分类');
@@ -229,7 +290,7 @@ router.post('/product/save', adminAuth, async (req, res) => {
     const data = {
       name, subtitle: subtitle || '', cover: cover || '',
       images: typeof images === 'string' ? images : JSON.stringify(images || []),
-      detail_images: typeof detail_images === 'string' ? detail_images : JSON.stringify(detail_images || []),
+      detail: detail || '',
       category_id: parseInt(category_id),
       price: parseFloat(price),
       original_price: parseFloat(original_price) || 0,
@@ -509,6 +570,276 @@ router.delete('/banner/delete', adminAuth, async (req, res) => {
     return res.success(null, '删除成功');
   } catch (err) {
     return res.fail('删除轮播图失败: ' + err.message);
+  }
+});
+
+// ============================================================
+// 个人设置
+// ============================================================
+
+/**
+ * 更新个人资料
+ */
+router.put('/profile', adminAuth, async (req, res) => {
+  try {
+    const { nickname, avatar, email, phone, wechat, signature, status, service_status } = req.body;
+    const fields = [];
+    const values = [];
+
+    if (nickname !== undefined) { fields.push('nickname = ?'); values.push(nickname); }
+    if (avatar !== undefined) { fields.push('avatar = ?'); values.push(avatar); }
+    if (email !== undefined) { fields.push('email = ?'); values.push(email); }
+    if (phone !== undefined) { fields.push('phone = ?'); values.push(phone); }
+    if (wechat !== undefined) { fields.push('wechat = ?'); values.push(wechat); }
+    if (signature !== undefined) { fields.push('signature = ?'); values.push(signature); }
+    if (status !== undefined) { fields.push('status = ?'); values.push(status); }
+    if (service_status !== undefined) { fields.push('service_status = ?'); values.push(service_status); }
+
+    if (fields.length === 0) {
+      return res.fail('没有需要更新的信息');
+    }
+
+    values.push(req.admin.id);
+    await db.query(`UPDATE admin SET ${fields.join(', ')} WHERE id = ?`, values);
+
+    return res.success(null, '更新成功');
+  } catch (err) {
+    return res.fail('更新失败: ' + err.message);
+  }
+});
+
+/**
+ * 修改密码
+ */
+router.put('/change-password', adminAuth, async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+
+    if (!oldPassword || !newPassword) {
+      return res.fail('请填写原密码和新密码');
+    }
+
+    if (newPassword.length < 6) {
+      return res.fail('新密码至少6位');
+    }
+
+    // 获取当前管理员信息
+    const [admins] = await db.query('SELECT password FROM admin WHERE id = ?', [req.admin.id]);
+    if (admins.length === 0) {
+      return res.fail('管理员不存在', 404);
+    }
+
+    // 验证原密码
+    const isValid = await verifyPassword(oldPassword, admins[0].password);
+    if (!isValid) {
+      return res.fail('原密码错误');
+    }
+
+    // 加密新密码
+    const hashedPassword = await hashPassword(newPassword);
+    await db.query('UPDATE admin SET password = ? WHERE id = ?', [hashedPassword, req.admin.id]);
+
+    return res.success(null, '密码修改成功');
+  } catch (err) {
+    return res.fail('修改密码失败: ' + err.message);
+  }
+});
+
+// ============================================================
+// 管理员/客服管理（仅超级管理员可用）
+// ============================================================
+
+/**
+ * 检查是否为超级管理员
+ */
+const superAdminAuth = async (req, res, next) => {
+  try {
+    const [admins] = await db.query('SELECT role FROM admin WHERE id = ?', [req.admin.id]);
+    if (admins.length === 0 || admins[0].role !== 'super') {
+      return res.fail('仅超级管理员可操作', 403);
+    }
+    next();
+  } catch (err) {
+    return res.fail('权限检查失败: ' + err.message);
+  }
+};
+
+/**
+ * 获取管理员列表
+ */
+router.get('/admin/list', adminAuth, superAdminAuth, async (req, res) => {
+  try {
+    const [list] = await db.query(
+      'SELECT id, username, nickname, avatar, role, status, created_at FROM admin ORDER BY id ASC'
+    );
+    return res.success(list);
+  } catch (err) {
+    return res.fail('获取管理员列表失败: ' + err.message);
+  }
+});
+
+/**
+ * 创建管理员/客服
+ */
+router.post('/admin/create', adminAuth, superAdminAuth, async (req, res) => {
+  try {
+    const { username, password, nickname, role, permission_group_id, avatar } = req.body;
+
+    if (!username || !password) {
+      return res.fail('用户名和密码不能为空');
+    }
+
+    if (password.length < 6) {
+      return res.fail('密码至少6位');
+    }
+
+    // 检查用户名是否已存在
+    const [existing] = await db.query('SELECT id FROM admin WHERE username = ?', [username]);
+    if (existing.length > 0) {
+      return res.fail('用户名已存在');
+    }
+
+    // 加密密码
+    const hashedPassword = await hashPassword(password);
+
+    // 插入新管理员
+    const [result] = await db.query(
+      'INSERT INTO admin (username, password, nickname, role, status, permission_group_id, avatar) VALUES (?, ?, ?, ?, 1, ?, ?)',
+      [username, hashedPassword, nickname || '', role || 'service', permission_group_id || null, avatar || '']
+    );
+
+    return res.success({ id: result.insertId }, '创建成功');
+  } catch (err) {
+    return res.fail('创建管理员失败: ' + err.message);
+  }
+});
+
+/**
+ * 删除管理员
+ */
+router.delete('/admin/delete', adminAuth, superAdminAuth, async (req, res) => {
+  try {
+    const { id } = req.body;
+    if (!id) return res.fail('缺少管理员ID');
+
+    // 不能删除自己
+    if (parseInt(id) === req.admin.id) {
+      return res.fail('不能删除当前登录账号');
+    }
+
+    // 检查是否为超级管理员
+    const [admins] = await db.query('SELECT role FROM admin WHERE id = ?', [id]);
+    if (admins.length === 0) return res.fail('管理员不存在');
+
+    await db.query('DELETE FROM admin WHERE id = ?', [id]);
+    return res.success(null, '删除成功');
+  } catch (err) {
+    return res.fail('删除管理员失败: ' + err.message);
+  }
+});
+
+// ============================================================
+// 权限组管理
+// ============================================================
+
+/**
+ * 获取权限组列表
+ */
+router.get('/permission-group/list', adminAuth, superAdminAuth, async (req, res) => {
+  try {
+    const [list] = await db.query('SELECT * FROM permission_group ORDER BY id ASC');
+    // 解析权限，支持 JSON 数组或逗号分隔字符串
+    const result = list.map(item => {
+      let permissions = [];
+      if (item.permissions) {
+        const permStr = item.permissions.toString().trim();
+        // 尝试解析 JSON 数组
+        if (permStr.startsWith('[')) {
+          try {
+            const parsed = JSON.parse(permStr);
+            permissions = Array.isArray(parsed) ? parsed : [];
+          } catch {
+            permissions = [];
+          }
+        } else {
+          // 逗号分隔的字符串
+          permissions = permStr.split(',').map(p => p.trim()).filter(p => p);
+        }
+      }
+      return {
+        id: item.id,
+        name: item.name,
+        permissions: permissions,
+        created_at: item.created_at
+      };
+    });
+    return res.success(result);
+  } catch (err) {
+    return res.fail('获取权限组列表失败: ' + err.message);
+  }
+});
+
+/**
+ * 创建权限组
+ */
+router.post('/permission-group/create', adminAuth, superAdminAuth, async (req, res) => {
+  try {
+    const { name, permissions } = req.body;
+
+    if (!name) {
+      return res.fail('权限组名称不能为空');
+    }
+
+    const [result] = await db.query(
+      'INSERT INTO permission_group (name, permissions) VALUES (?, ?)',
+      [name, JSON.stringify(permissions || [])]
+    );
+
+    return res.success({ id: result.insertId }, '创建成功');
+  } catch (err) {
+    return res.fail('创建权限组失败: ' + err.message);
+  }
+});
+
+/**
+ * 更新权限组
+ */
+router.put('/permission-group/update', adminAuth, superAdminAuth, async (req, res) => {
+  try {
+    const { id, name, permissions } = req.body;
+
+    if (!id) return res.fail('缺少权限组ID');
+    if (!name) return res.fail('权限组名称不能为空');
+
+    await db.query(
+      'UPDATE permission_group SET name = ?, permissions = ? WHERE id = ?',
+      [name, JSON.stringify(permissions || []), id]
+    );
+
+    return res.success(null, '更新成功');
+  } catch (err) {
+    return res.fail('更新权限组失败: ' + err.message);
+  }
+});
+
+/**
+ * 删除权限组
+ */
+router.delete('/permission-group/delete', adminAuth, superAdminAuth, async (req, res) => {
+  try {
+    const { id } = req.body;
+    if (!id) return res.fail('缺少权限组ID');
+
+    // 检查是否有管理员使用该权限组
+    const [admins] = await db.query('SELECT COUNT(*) as count FROM admin WHERE permission_group_id = ?', [id]);
+    if (admins[0].count > 0) {
+      return res.fail('该权限组正在被使用，无法删除');
+    }
+
+    await db.query('DELETE FROM permission_group WHERE id = ?', [id]);
+    return res.success(null, '删除成功');
+  } catch (err) {
+    return res.fail('删除权限组失败: ' + err.message);
   }
 });
 

@@ -20,6 +20,7 @@ const adminRoutes = require('./routes/admin');
 const categoryRoutes = require('./routes/category');
 const uploadRoutes = require('./routes/upload');
 const expressRoutes = require('./routes/express');
+const chatRoutes = require('./routes/chat');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -36,10 +37,11 @@ app.use(express.json({ limit: '10mb' }));
 // 解析 URL 编码请求体
 app.use(express.urlencoded({ extended: true }));
 
-// 静态文件服务（上传的图片、管理后台页面、分类图标）
+// 静态文件服务（上传的图片、管理后台页面、分类图标、客服客户端）
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 app.use('/admin', express.static(path.join(__dirname, 'public/admin')));
+app.use('/service', express.static(path.join(__dirname, 'public/service')));
 
 // ============================================================
 // 统一响应格式封装
@@ -66,10 +68,16 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/express', expressRoutes);
+app.use('/api/chat', chatRoutes);
 
 // 管理后台入口 - 返回 index.html
 app.get('/admin/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/admin/index.html'));
+});
+
+// 客服工作台入口 - 返回 index.html
+app.get('/service/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/service/index.html'));
 });
 
 // ============================================================

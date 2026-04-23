@@ -15,8 +15,8 @@ body { font-family: -apple-system, 'Microsoft YaHei', sans-serif; background: #f
 .login-box .subtitle { text-align: center; color: #999; margin-bottom: 32px; font-size: 14px; }
 .form-group { margin-bottom: 20px; }
 .form-group label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; }
-.form-group input { width: 100%; padding: 12px 16px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; transition: border-color 0.3s; }
-.form-group input:focus { outline: none; border-color: #667eea; }
+.form-group input, .form-group select { width: 100%; padding: 12px 16px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; transition: border-color 0.3s; background: #fff; }
+.form-group input:focus, .form-group select:focus { outline: none; border-color: #667eea; }
 .btn { padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; transition: opacity 0.3s; }
 .btn:hover { opacity: 0.85; }
 .btn-primary { background: #667eea; color: #fff; width: 100%; padding: 14px; font-size: 16px; }
@@ -33,14 +33,22 @@ body { font-family: -apple-system, 'Microsoft YaHei', sans-serif; background: #f
 .sidebar-header h2 { font-size: 18px; color: #fff; }
 .sidebar-header .version { font-size: 12px; color: rgba(255,255,255,0.5); }
 .nav-menu { padding: 10px 0; }
-.nav-item { padding: 14px 24px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,0.65); transition: all 0.3s; font-size: 14px; }
+.nav-item { padding: 14px 24px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,0.65); transition: all 0.3s; font-size: 14px; position: relative; }
 .nav-item:hover { color: #fff; background: rgba(255,255,255,0.05); }
 .nav-item.active { color: #fff; background: #1890ff; }
+.nav-item.has-submenu { flex-direction: column; align-items: flex-start; gap: 0; padding: 0; }
+.nav-item.has-submenu > span { padding: 14px 24px; display: flex; align-items: center; gap: 10px; width: 100%; }
+.nav-item.has-submenu:hover .submenu, .nav-item.has-submenu.submenu-open .submenu { display: block; }
+.submenu { display: none; width: 100%; background: rgba(0,0,0,0.15); padding: 5px 0; }
+.submenu-item { padding: 10px 24px 10px 50px; cursor: pointer; color: rgba(255,255,255,0.65); font-size: 13px; transition: all 0.3s; }
+.submenu-item:hover { color: #fff; background: rgba(255,255,255,0.05); }
+.submenu-item.active { color: #fff; background: #1890ff; }
 
 .main-content { flex: 1; display: flex; flex-direction: column; }
 .top-header { background: #fff; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
 .top-header h3 { font-size: 18px; }
 .top-header .user-info { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+.header-avatar { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #667eea; object-fit: cover; }
 .logout-btn { cursor: pointer; color: #999; }
 .logout-btn:hover { color: #ff4d4f; }
 
@@ -70,6 +78,9 @@ tr:hover td { background: #f9f9f9; }
 .status-tag.inactive { background: #fff1f0; color: #ff4d4f; }
 .status-tag.pending { background: #e6f7ff; color: #1890ff; }
 .status-tag.shipped { background: #fff7e6; color: #fa8c16; }
+
+/* ========== 权限标签 ========== */
+.permission-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; background: #e6f7ff; color: #1890ff; margin: 2px; }
 
 /* ========== 模态框 ========== */
 .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
@@ -111,6 +122,93 @@ img.product-thumb { width: 50px; height: 50px; object-fit: cover; border-radius:
 .image-item img { width: 100%; height: 100%; object-fit: cover; }
 .image-item .remove-btn { position: absolute; top: 4px; right: 4px; width: 24px; height: 24px; background: rgba(255,77,79,0.9); color: #fff; border: none; border-radius: 50%; cursor: pointer; font-size: 16px; line-height: 24px; text-align: center; }
 .image-preview { position: relative; width: 120px; height: 120px; }
+
+/* ========== 客服管理样式 ========== */
+.service-layout { display: flex; height: calc(100vh - 140px); background: #f5f5f5; border-radius: 12px; overflow: hidden; }
+.session-sidebar { width: 300px; background: #fff; border-right: 1px solid #e8e8e8; display: flex; flex-direction: column; }
+.session-sidebar .sidebar-header { padding: 16px 20px; border-bottom: 1px solid #e8e8e8; }
+.session-sidebar .admin-profile { display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 8px; border-radius: 8px; transition: background 0.3s; }
+.session-sidebar .admin-profile:hover { background: #f5f5f5; }
+.session-sidebar .admin-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid #e8e8e8; }
+.session-sidebar .admin-info { flex: 1; }
+.session-sidebar .admin-info h2 { font-size: 16px; color: #333; font-weight: 500; }
+.session-sidebar .admin-info .status { font-size: 12px; color: #52c41a; margin-top: 4px; }
+.session-list { flex: 1; overflow-y: auto; }
+.session-item { display: flex; padding: 16px; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: all 0.3s; position: relative; }
+.session-item:hover { background: #f5f5f5; }
+.session-item.active { background: #e6f7ff; }
+.session-avatar { width: 48px; height: 48px; border-radius: 50%; margin-right: 12px; object-fit: cover; }
+.session-info { flex: 1; min-width: 0; }
+.session-name { font-size: 15px; color: #333; font-weight: 500; margin-bottom: 4px; }
+.session-preview { font-size: 13px; color: #999; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.session-time { font-size: 12px; color: #bbb; margin-left: 8px; }
+.session-badge { position: absolute; top: 12px; right: 12px; background: #ff4d4f; color: #fff; font-size: 12px; min-width: 18px; height: 18px; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 5px; }
+.chat-area { flex: 1; display: flex; flex-direction: column; background: #f5f5f5; }
+.chat-header { padding: 16px 20px; background: #fff; border-bottom: 1px solid #e8e8e8; display: flex; align-items: center; justify-content: space-between; }
+.chat-header-left { display: flex; align-items: center; gap: 12px; }
+.chat-user-info h3 { font-size: 16px; color: #333; }
+.chat-user-info p { font-size: 13px; color: #999; margin-top: 2px; }
+.chat-actions { display: flex; gap: 12px; align-items: center; }
+.chat-actions button { padding: 8px 16px; border: 1px solid #d9d9d9; background: #fff; border-radius: 4px; cursor: pointer; font-size: 13px; }
+.chat-actions button:hover { border-color: #667eea; color: #667eea; }
+.staff-avatar-wrapper { width: 40px; height: 40px; border-radius: 8px; overflow: hidden; cursor: pointer; border: 2px solid #667eea; transition: border-color 0.3s; background: #667eea; display: flex; align-items: center; justify-content: center; }
+.staff-avatar-wrapper:hover { border-color: #5568d3; box-shadow: 0 0 8px rgba(102, 126, 234, 0.5); }
+.staff-avatar-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+.staff-avatar-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+.product-card { display: flex; align-items: center; padding: 12px 20px; background: #fff; border-bottom: 1px solid #e8e8e8; }
+.product-card img { width: 60px; height: 60px; border-radius: 4px; margin-right: 12px; object-fit: cover; }
+.product-info { flex: 1; }
+.product-name { font-size: 14px; color: #333; margin-bottom: 4px; }
+.product-price { font-size: 16px; color: #ff4d4f; font-weight: bold; }
+.product-actions { display: flex; gap: 8px; }
+.product-actions button { padding: 6px 12px; border: none; background: #667eea; color: #fff; border-radius: 4px; cursor: pointer; font-size: 12px; }
+.message-list { flex: 1; overflow-y: auto; padding: 20px; }
+.message-item { display: flex; margin-bottom: 20px; }
+.message-item.user { justify-content: flex-end; }
+.message-avatar { width: 40px; height: 40px; border-radius: 50%; margin: 0 12px; object-fit: cover; }
+.message-content { max-width: 60%; }
+.message-bubble { padding: 12px 16px; border-radius: 8px; background: #fff; font-size: 14px; line-height: 1.5; word-break: break-all; }
+.user .message-bubble { background: #667eea; color: #fff; }
+.message-time { font-size: 12px; color: #bbb; margin-top: 4px; text-align: center; }
+.product-msg { background: #fff; border-radius: 8px; padding: 12px; width: 240px; cursor: pointer; }
+.product-msg img { width: 100%; height: 160px; object-fit: cover; border-radius: 4px; margin-bottom: 8px; }
+.product-msg .name { font-size: 14px; color: #333; margin-bottom: 4px; }
+.product-msg .price { font-size: 16px; color: #ff4d4f; font-weight: bold; }
+.input-area { padding: 16px 20px; background: #fff; border-top: 1px solid #e8e8e8; }
+.input-toolbar { display: flex; gap: 16px; margin-bottom: 12px; }
+.toolbar-btn { padding: 6px 12px; border: 1px solid #d9d9d9; background: #fff; border-radius: 4px; cursor: pointer; font-size: 13px; }
+.toolbar-btn:hover { border-color: #667eea; color: #667eea; }
+.input-wrap { display: flex; gap: 12px; }
+.input-wrap textarea { flex: 1; height: 80px; padding: 12px; border: 1px solid #d9d9d9; border-radius: 4px; resize: none; font-size: 14px; }
+.input-wrap button { padding: 0 24px; background: #667eea; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
+.input-wrap button:hover { background: #5568d3; }
+.settings-panel { position: fixed; top: 0; right: -420px; width: 400px; height: 100vh; background: #fff; box-shadow: -2px 0 8px rgba(0,0,0,0.1); transition: right 0.3s; z-index: 1000; display: flex; flex-direction: column; }
+.settings-panel.open { right: 0; }
+.settings-header { padding: 20px; border-bottom: 1px solid #e8e8e8; display: flex; align-items: center; justify-content: space-between; }
+.settings-header h3 { font-size: 16px; color: #333; }
+.settings-header .close-btn { width: 32px; height: 32px; border: none; background: none; cursor: pointer; font-size: 18px; color: #999; }
+.settings-header .close-btn:hover { color: #333; }
+.settings-body { flex: 1; overflow-y: auto; padding: 20px; }
+.settings-section { margin-bottom: 24px; }
+.settings-section h4 { font-size: 14px; color: #333; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #f0f0f0; }
+.settings-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f5f5f5; }
+.settings-item:last-child { border-bottom: none; }
+.settings-item label { font-size: 14px; color: #555; }
+.settings-item .switch { position: relative; width: 44px; height: 22px; background: #ccc; border-radius: 11px; cursor: pointer; transition: background 0.3s; }
+.settings-item .switch.active { background: #667eea; }
+.settings-item .switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: #fff; border-radius: 50%; transition: transform 0.3s; }
+.settings-item .switch.active::after { transform: translateX(22px); }
+.customer-info { background: #f8f9fa; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.customer-info-item { display: flex; padding: 8px 0; border-bottom: 1px dashed #e8e8e8; }
+.customer-info-item:last-child { border-bottom: none; }
+.customer-info-item label { width: 80px; color: #666; font-size: 13px; }
+.customer-info-item span { flex: 1; color: #333; font-size: 13px; }
+.customer-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+.customer-stat { text-align: center; padding: 12px; background: #fff; border-radius: 8px; }
+.customer-stat .value { font-size: 20px; font-weight: bold; color: #667eea; }
+.customer-stat .label { font-size: 12px; color: #999; margin-top: 4px; }
+.overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 999; display: none; }
+.overlay.show { display: block; }
 </style>
 </head>
 <body>
@@ -140,13 +238,23 @@ img.product-thumb { width: 50px; height: 50px; object-fit: cover; border-radius:
       <p class="version">管理后台 v1.0</p>
     </div>
     <div class="nav-menu">
-      <div class="nav-item active" onclick="switchPage('dashboard')">📊 数据统计</div>
-      <div class="nav-item" onclick="switchPage('products')">📦 商品管理</div>
-      <div class="nav-item" onclick="switchPage('categories')">📂 分类管理</div>
-      <div class="nav-item" onclick="switchPage('orders')">📋 订单管理</div>
-      <div class="nav-item" onclick="switchPage('users')">👥 用户管理</div>
-      <div class="nav-item" onclick="switchPage('express')">🚚 快递管理</div>
-      <div class="nav-item" onclick="switchPage('banners')">🎠 轮播管理</div>
+      <div class="nav-item active" onclick="switchPage('dashboard')" id="nav-dashboard">📊 数据统计</div>
+      <div class="nav-item" onclick="switchPage('products')" id="nav-products">📦 商品管理</div>
+      <div class="nav-item" onclick="switchPage('categories')" id="nav-categories">📂 分类管理</div>
+      <div class="nav-item" onclick="switchPage('orders')" id="nav-orders">📋 订单管理</div>
+      <div class="nav-item" onclick="switchPage('users')" id="nav-users">👥 用户管理</div>
+      <div class="nav-item" onclick="switchPage('express')" id="nav-express">🚚 快递管理</div>
+      <div class="nav-item" onclick="switchPage('banners')" id="nav-banners">🎠 轮播管理</div>
+      <div class="nav-item" onclick="switchPage('service')" id="nav-service">💬 客服管理</div>
+      <div class="nav-item super-only hide has-submenu" id="nav-service-manage">
+        <span>👤 客服管理</span>
+        <div class="submenu">
+          <div class="submenu-item" onclick="switchPage('admins')" id="nav-admins">客服列表</div>
+          <div class="submenu-item" onclick="switchPage('super-admins')" id="nav-super-admins">超级管理员</div>
+          <div class="submenu-item" onclick="switchPage('permission-groups')" id="nav-permission-groups">权限组</div>
+        </div>
+      </div>
+      <div class="nav-item" onclick="switchPage('profile')" id="nav-profile">⚙️ 个人设置</div>
     </div>
   </div>
 
@@ -155,6 +263,8 @@ img.product-thumb { width: 50px; height: 50px; object-fit: cover; border-radius:
     <div class="top-header">
       <h3 id="pageTitle">数据统计</h3>
       <div class="user-info">
+        <img id="headerAvatar" class="header-avatar" src="/images/default-avatar.png" alt="头像" onclick="document.getElementById('headerAvatarInput').click()" style="cursor:pointer;" title="点击更换头像">
+        <input type="file" id="headerAvatarInput" accept="image/*" style="display:none" onchange="handleHeaderAvatarUpload(this)">
         <span id="adminName">管理员</span>
         <span class="logout-btn" onclick="doLogout()">退出登录</span>
       </div>
@@ -256,6 +366,132 @@ img.product-thumb { width: 50px; height: 50px; object-fit: cover; border-radius:
             <thead><tr><th>ID</th><th>图片</th><th>排序</th><th>状态</th><th>操作</th></tr></thead>
             <tbody id="bannerTableBody"></tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- ========== 客服管理 ========== -->
+      <div id="page-service" class="hide">
+        <!-- 超级管理员视图：显示子用户列表 -->
+        <div id="service-admin-view" class="hide">
+          <div class="card">
+            <div class="card-header"><h4>客服工作台 - 子用户聊天统计</h4></div>
+            <table>
+              <thead><tr><th>ID</th><th>头像</th><th>昵称</th><th>服务客户数</th><th>总消息数</th><th>今日消息</th><th>状态</th><th>操作</th></tr></thead>
+              <tbody id="serviceAdminTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <!-- 客服视图：自己的工作台 -->
+        <div id="service-staff-view" class="service-layout">
+          <!-- 左侧会话列表 -->
+          <div class="session-sidebar">
+            <div class="sidebar-header">
+              <div class="admin-profile" onclick="openServiceProfileModal()">
+                <img id="serviceAdminAvatar" src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2244%22 height=%2244%22%3E%3Crect width=%2244%22 height=%2244%22 fill=%22%23667eea%22/%3E%3Ctext x=%2222%22 y=%2227%22 font-size=%2214%22 text-anchor=%22middle%22 fill=%22%23fff%22%3E客服%3C/text%3E%3C/svg%3E" alt="头像" class="admin-avatar">
+                <div class="admin-info">
+                  <h2 id="serviceAdminName">客服工作台</h2>
+                  <div class="status">● 在线服务中</div>
+                </div>
+              </div>
+            </div>
+            <div class="session-list" id="sessionList">
+              <div class="empty-state">暂无会话</div>
+            </div>
+          </div>
+          <!-- 右侧聊天区域 -->
+          <div class="chat-area" id="chatArea">
+            <div class="empty-state">请选择左侧会话开始服务</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== 子用户聊天详情模态框（超级管理员查看） ========== -->
+      <div id="staffChatModal" class="modal-overlay hide">
+        <div class="modal" style="width: 900px; max-height: 90vh;">
+          <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 id="staffChatTitle">客服聊天详情</h3>
+            <button class="btn btn-default btn-sm" onclick="closeStaffChatModal()">关闭</button>
+          </div>
+          <div style="display: flex; gap: 20px; height: 600px;">
+            <!-- 左侧：该客服服务的客户列表 -->
+            <div style="width: 280px; border-right: 1px solid #e8e8e8; padding-right: 20px;">
+              <h4 style="margin-bottom: 12px; font-size: 14px; color: #666;">服务客户列表</h4>
+              <div id="staffCustomerList" style="overflow-y: auto; max-height: 550px;"></div>
+            </div>
+            <!-- 右侧：聊天记录 -->
+            <div style="flex: 1; display: flex; flex-direction: column;">
+              <div id="staffChatHeader" style="padding: 12px; background: #f5f5f5; border-radius: 8px; margin-bottom: 12px;">
+                <span style="color: #999;">请选择左侧客户查看聊天记录</span>
+              </div>
+              <div id="staffChatMessages" style="flex: 1; overflow-y: auto; background: #f9f9f9; border-radius: 8px; padding: 16px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== 客服列表 ========== -->
+      <div id="page-admins" class="hide">
+        <div class="card">
+          <div class="card-header" style="justify-content: flex-end;"><button class="btn btn-primary btn-sm" onclick="showAdminModal()">+ 新增客服</button></div>
+          <table>
+            <thead><tr><th>ID</th><th>头像</th><th>用户名</th><th>昵称</th><th>角色</th><th>状态</th><th>创建时间</th><th>操作</th></tr></thead>
+            <tbody id="adminTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ========== 超级管理员 ========== -->
+      <div id="page-super-admins" class="hide">
+        <div class="card">
+          <div class="card-header" style="justify-content: flex-end;"><button class="btn btn-primary btn-sm" onclick="showAdminModal()">+ 新增管理员</button></div>
+          <table>
+            <thead><tr><th>ID</th><th>头像</th><th>用户名</th><th>昵称</th><th>角色</th><th>状态</th><th>创建时间</th><th>操作</th></tr></thead>
+            <tbody id="superAdminTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ========== 权限组管理 ========== -->
+      <div id="page-permission-groups" class="hide">
+        <div class="card">
+          <div class="card-header" style="justify-content: flex-end;"><button class="btn btn-primary btn-sm" onclick="showPermissionGroupModal()">+ 新增权限组</button></div>
+          <table>
+            <thead><tr><th>ID</th><th>权限组名称</th><th>权限</th><th>创建时间</th><th>操作</th></tr></thead>
+            <tbody id="permissionGroupTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ========== 个人设置 ========== -->
+      <div id="page-profile" class="hide">
+        <div class="card">
+          <div class="card-header"><h4>个人信息</h4></div>
+          <div style="padding: 20px; max-width: 500px;">
+            <div class="form-group">
+              <label>用户ID</label>
+              <input type="text" id="profileId" readonly style="background: #f5f5f5;">
+            </div>
+            <div class="form-group">
+              <label>用户名</label>
+              <input type="text" id="profileUsername" readonly style="background: #f5f5f5;">
+            </div>
+            <div class="form-group">
+              <label>角色</label>
+              <input type="text" id="profileRole" readonly style="background: #f5f5f5;">
+            </div>
+            <div class="form-group">
+              <label>昵称</label>
+              <input type="text" id="profileNickname" placeholder="请输入昵称">
+            </div>
+            <div class="form-group">
+              <label>头像URL</label>
+              <input type="text" id="profileAvatar" placeholder="请输入头像URL">
+            </div>
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+              <button class="btn btn-primary" onclick="saveProfile()">保存信息</button>
+              <button class="btn btn-default" onclick="showChangePasswordModal()">修改密码</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -400,6 +636,117 @@ img.product-thumb { width: 50px; height: 50px; object-fit: cover; border-radius:
   </div>
 </div>
 
+<!-- ==================== 客服个人信息模态框 ==================== -->
+<div id="serviceProfileModal" class="modal-overlay hide">
+  <div class="modal" style="width: 420px;">
+    <h3>编辑个人信息</h3>
+    <div class="form-group" style="text-align: center;">
+      <label style="display: block; margin-bottom: 8px;">头像</label>
+      <div style="display: flex; justify-content: center;">
+        <div class="upload-placeholder" id="spAvatarPreview" onclick="document.getElementById('spAvatarInput').click()" style="width: 80px; height: 80px; border-radius: 50%;">
+          <span style="font-size: 24px;">+</span>
+          <p style="font-size: 11px;">上传头像</p>
+        </div>
+      </div>
+      <input type="file" id="spAvatarInput" accept="image/*" style="display: none;" onchange="handleServiceAvatarUpload(this)">
+    </div>
+    <div class="form-group"><label>昵称</label><input id="spNickname" placeholder="请输入昵称"></div>
+    <div class="modal-actions">
+      <button class="btn btn-default" onclick="closeServiceProfileModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveServiceProfile()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 管理员/客服新增模态框 ==================== -->
+<div id="adminModal" class="modal-overlay hide">
+  <div class="modal" style="width: 420px;">
+    <h3>新增管理员/客服</h3>
+    <div class="form-group" style="text-align: center;">
+      <label style="display: block; margin-bottom: 8px;">头像</label>
+      <div style="display: flex; justify-content: center;">
+        <div class="upload-placeholder" id="adminAvatarPreview" onclick="document.getElementById('adminAvatarInput').click()" style="width: 80px; height: 80px; border-radius: 50%;">
+          <span style="font-size: 24px;">+</span>
+          <p style="font-size: 11px;">上传头像</p>
+        </div>
+      </div>
+      <input type="file" id="adminAvatarInput" accept="image/*" style="display: none;" onchange="handleAdminAvatarUpload(this)">
+    </div>
+    <div class="form-group"><label>用户名 *</label><input id="aUsername" placeholder="登录用户名"></div>
+    <div class="form-group"><label>密码 *</label><input id="aPassword" type="password" placeholder="至少6位"></div>
+    <div class="form-group"><label>昵称</label><input id="aNickname" placeholder="显示名称"></div>
+    <div class="form-group"><label>角色</label><select id="aRole"><option value="service">客服</option><option value="super">超级管理员</option><option value="other">其他</option></select></div>
+    <div class="form-group"><label>权限组</label><select id="aPermissionGroup"><option value="">请选择权限组</option></select></div>
+    <div class="modal-actions">
+      <button class="btn btn-default" onclick="closeAdminModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveAdmin()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 权限组模态框 ==================== -->
+<div id="permissionGroupModal" class="modal-overlay hide">
+  <div class="modal" style="width: 500px;">
+    <h3 id="pgModalTitle">新增权限组</h3>
+    <input type="hidden" id="pgId">
+    <div class="form-group"><label>权限组名称 *</label><input id="pgName" placeholder="如：商品管理员"></div>
+    <div class="form-group"><label>权限选择</label>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; padding: 12px; background: #f5f5f5; border-radius: 8px;">
+        <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer;"><input type="checkbox" name="pgPermission" value="dashboard"> 数据统计</label>
+        <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer;"><input type="checkbox" name="pgPermission" value="products"> 商品管理</label>
+        <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer;"><input type="checkbox" name="pgPermission" value="categories"> 分类管理</label>
+        <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer;"><input type="checkbox" name="pgPermission" value="orders"> 订单管理</label>
+        <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer;"><input type="checkbox" name="pgPermission" value="users"> 用户管理</label>
+        <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer;"><input type="checkbox" name="pgPermission" value="express"> 快递管理</label>
+        <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer;"><input type="checkbox" name="pgPermission" value="banners"> 轮播管理</label>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-default" onclick="closePermissionGroupModal()">取消</button>
+      <button class="btn btn-primary" onclick="savePermissionGroup()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 修改密码模态框 ==================== -->
+<div id="changePasswordModal" class="modal-overlay hide">
+  <div class="modal" style="width: 400px;">
+    <h3>修改密码</h3>
+    <div class="form-group"><label>当前密码 *</label><input id="oldPassword" type="password" placeholder="请输入当前密码"></div>
+    <div class="form-group"><label>新密码 *</label><input id="newPassword" type="password" placeholder="至少6位"></div>
+    <div class="form-group"><label>确认新密码 *</label><input id="confirmPassword" type="password" placeholder="再次输入新密码"></div>
+    <div class="modal-actions">
+      <button class="btn btn-default" onclick="closeChangePasswordModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveChangePassword()">确认修改</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 客户信息设置面板 ==================== -->
+<div class="overlay" id="overlay" onclick="closeSettings()"></div>
+<div class="settings-panel" id="settingsPanel">
+  <div class="settings-header">
+    <h3>⚙️ 客户信息</h3>
+    <button class="close-btn" onclick="closeSettings()">✕</button>
+  </div>
+  <div class="settings-body">
+    <div class="settings-section">
+      <h4>👤 客户信息</h4>
+      <div class="customer-info">
+        <div class="customer-info-item"><label>用户ID</label><span id="cUserId">-</span></div>
+        <div class="customer-info-item"><label>昵称</label><span id="cNickname">-</span></div>
+        <div class="customer-info-item"><label>注册时间</label><span id="cRegTime">-</span></div>
+        <div class="customer-info-item"><label>手机号</label><span id="cPhone">-</span></div>
+      </div>
+      <div class="customer-stats">
+        <div class="customer-stat"><div class="value" id="statOrders">0</div><div class="label">订单数</div></div>
+        <div class="customer-stat"><div class="value" id="statTotal">¥0</div><div class="label">消费总额</div></div>
+        <div class="customer-stat"><div class="value" id="statSessions">0</div><div class="label">会话数</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 // ==================== 配置 ====================
 const API_BASE = '/api/admin';
@@ -454,6 +801,11 @@ async function doLogin() {
     document.getElementById('adminName').textContent = data.data.adminInfo.nickname || data.data.adminInfo.username;
     document.getElementById('loginPage').classList.add('hide');
     document.getElementById('adminPage').classList.remove('hide');
+    // 先隐藏所有超级管理员专属菜单，然后根据角色显示
+    document.querySelectorAll('.super-only').forEach(el => el.classList.add('hide'));
+    if (data.data.adminInfo.role === 'super') {
+      document.querySelectorAll('.super-only').forEach(el => el.classList.remove('hide'));
+    }
     loadDashboard();
   } catch (e) { showToast('登录失败', 'error'); }
 }
@@ -469,14 +821,37 @@ function doLogout() {
 document.getElementById('loginPassword').addEventListener('keyup', e => { if (e.key === 'Enter') doLogin(); });
 
 // ==================== 页面切换 ====================
-const pageTitles = { dashboard: '数据统计', products: '商品管理', categories: '分类管理', orders: '订单管理', users: '用户管理', express: '快递管理', banners: '轮播管理' };
+const pageTitles = { dashboard: '数据统计', products: '商品管理', categories: '分类管理', orders: '订单管理', users: '用户管理', express: '快递管理', banners: '轮播管理', service: '客服工作台', admins: '客服列表', 'super-admins': '超级管理员', 'permission-groups': '权限组管理', profile: '个人设置' };
+
+// 客服角色允许访问的页面
+const SERVICE_ALLOWED_PAGES = ['products', 'service', 'profile'];
 
 function switchPage(page) {
+  // 权限检查：客服角色只能访问特定页面
+  if (currentAdminInfo && currentAdminInfo.role === 'service' && !SERVICE_ALLOWED_PAGES.includes(page)) {
+    showToast('您没有权限访问此页面', 'error');
+    return;
+  }
+
+  // 清除所有菜单的 active 状态
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  document.querySelectorAll('.submenu-item').forEach(el => el.classList.remove('active'));
+  
+  // 设置当前菜单项为 active
+  const target = event.currentTarget;
+  target.classList.add('active');
+  
+  // 如果是子菜单项，给父菜单添加一个特殊标记（但不改变背景色）
+  if (target.classList.contains('submenu-item')) {
+    const parentMenu = target.closest('.has-submenu');
+    if (parentMenu) parentMenu.classList.add('submenu-open');
+  }
   document.querySelectorAll('[id^="page-"]').forEach(el => el.classList.add('hide'));
   document.getElementById('page-' + page).classList.remove('hide');
   document.getElementById('pageTitle').textContent = pageTitles[page] || '';
+
+  // 停止客服轮询
+  stopServicePolling();
 
   if (page === 'dashboard') loadDashboard();
   if (page === 'products') loadProducts();
@@ -485,6 +860,22 @@ function switchPage(page) {
   if (page === 'users') loadUsers();
   if (page === 'express') loadExpressList();
   if (page === 'banners') loadBanners();
+  if (page === 'service') { 
+    // 根据角色加载不同视图
+    if (currentAdminInfo && currentAdminInfo.role === 'super') {
+      loadServiceAdminStats();
+    } else {
+      document.getElementById('service-admin-view').classList.add('hide');
+      document.getElementById('service-staff-view').classList.remove('hide');
+      loadServiceAdminInfo(); 
+      loadSessions(); 
+      startServicePolling(); 
+    }
+  }
+  if (page === 'admins') loadAdmins();
+  if (page === 'super-admins') loadSuperAdmins();
+  if (page === 'permission-groups') loadPermissionGroups();
+  if (page === 'profile') loadProfile();
 }
 
 // ==================== 数据统计 ====================
@@ -890,14 +1281,872 @@ async function deleteBanner(id) {
   loadBanners();
 }
 
+// ==================== 客服管理 ====================
+let currentSessionId = null;
+let servicePollingTimer = null;
+let sessions = [];
+let currentAdminInfo = null;
+
+// Chat API 基础路径
+const CHAT_API_BASE = '/api';
+
+// 客服专用请求封装
+async function chatApi(method, url, data = {}) {
+  const opts = {
+    method,
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
+  };
+  if (method !== 'GET') opts.body = JSON.stringify(data);
+  const res = await fetch(CHAT_API_BASE + url, opts);
+  const json = await res.json();
+  if (json.code === 401) { doLogout(); throw new Error('登录过期'); }
+  if (json.code !== 200) { showToast(json.msg || '操作失败', 'error'); throw new Error(json.msg); }
+  return json.data;
+}
+
+// 加载客服信息
+async function loadServiceAdminInfo() {
+  try {
+    const admin = await api('GET', '/info');
+    currentAdminInfo = admin;
+    // 更新所有头像显示
+    updateServiceAvatars();
+  } catch (e) {}
+}
+
+// 处理顶部头像上传
+async function handleHeaderAvatarUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  
+  if (!file.type.startsWith('image/')) {
+    showToast('请选择图片文件', 'error');
+    return;
+  }
+  
+  if (file.size > 2 * 1024 * 1024) {
+    showToast('图片大小不能超过2MB', 'error');
+    return;
+  }
+  
+  try {
+    // 先预览本地图片
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById('headerAvatar').src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+    
+    // 上传到服务器
+    const formData = new FormData();
+    formData.append('image', file);
+    const uploadRes = await fetch('/api/upload/image', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token },
+      body: formData
+    }).then(r => r.json());
+    
+    if (uploadRes.code !== 200) throw new Error(uploadRes.msg);
+    
+    const avatarUrl = uploadRes.data.url;
+    
+    // 更新数据库
+    await api('PUT', '/profile', { avatar: avatarUrl });
+    
+    // 更新本地状态
+    if (currentAdminInfo) {
+      currentAdminInfo.avatar = avatarUrl;
+    }
+    updateServiceAvatars();
+    
+    showToast('头像更新成功');
+  } catch (e) {
+    showToast('上传失败: ' + e.message, 'error');
+    // 恢复原头像
+    if (currentAdminInfo && currentAdminInfo.avatar) {
+      document.getElementById('headerAvatar').src = currentAdminInfo.avatar;
+    }
+  }
+  
+  // 清空input，允许重复选择同一文件
+  input.value = '';
+}
+
+// 加载会话列表
+async function loadSessions() {
+  try {
+    sessions = await chatApi('GET', '/chat/sessions?pageSize=50');
+    renderSessionList();
+  } catch (e) {}
+}
+
+function renderSessionList() {
+  const listEl = document.getElementById('sessionList');
+  if (!listEl) return;
+  if (sessions.length === 0) {
+    listEl.innerHTML = '<div class="empty-state">暂无会话</div>';
+    return;
+  }
+  listEl.innerHTML = sessions.map(s => {
+    let avatarUrl = s.user_avatar;
+    if (avatarUrl && avatarUrl.startsWith('/')) avatarUrl = window.location.origin + avatarUrl;
+    return `
+    <div class="session-item ${s.id === currentSessionId ? 'active' : ''}" onclick="selectSession(${s.id})">
+      <img class="session-avatar" src="${avatarUrl || ''}" alt="" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2248%22 height=%2248%22%3E%3Crect width=%2248%22 height=%2248%22 fill=%22%23e0e0e0%22/%3E%3Ctext x=%2224%22 y=%2228%22 font-size=%2214%22 text-anchor=%22middle%22 fill=%22%23999%22%3E用户%3C/text%3E%3C/svg%3E'">
+      <div class="session-info">
+        <div class="session-name">${s.user_name || '用户' + s.user_id}</div>
+        <div class="session-preview">${s.last_message || '暂无消息'}</div>
+      </div>
+      <div class="session-time">${formatTime(s.last_time)}</div>
+      ${s.admin_unread > 0 ? `<div class="session-badge">${s.admin_unread}</div>` : ''}
+    </div>
+  `}).join('');
+}
+
+function formatTime(time) {
+  if (!time) return '';
+  const date = new Date(time);
+  const now = new Date();
+  if (date.toDateString() === now.toDateString()) return date.toTimeString().slice(0, 5);
+  return `${date.getMonth() + 1}/${date.getDate()}`;
+}
+
+async function selectSession(sessionId) {
+  currentSessionId = sessionId;
+  renderSessionList();
+  const session = sessions.find(s => s.id === sessionId);
+  if (!session) return;
+  const chatArea = document.getElementById('chatArea');
+  chatArea.innerHTML = `
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <div class="chat-user-info">
+          <h3>${session.user_name || '用户' + session.user_id}</h3>
+          <p>用户ID: ${session.user_id}</p>
+        </div>
+      </div>
+      <div class="chat-actions">
+        <div class="staff-avatar-wrapper" onclick="openServiceProfileModal()" title="点击修改头像">
+          <img id="chatHeaderAvatar" src="" alt="头像" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22%3E%3Crect width=%2240%22 height=%2240%22 fill=%22%23667eea%22 rx=%228%22/%3E%3Ctext x=%2220%22 y=%2225%22 font-size=%2216%22 text-anchor=%22middle%22 fill=%22%23fff%22%3E%E5%AE%A2%3C/text%3E%3C/svg%3E'">
+        </div>
+        <button onclick="openSettings()">⚙️ 客户信息</button>
+        <button onclick="closeSession(${sessionId})">结束会话</button>
+      </div>
+    </div>
+    ${session.product_id ? `
+    <div class="product-card">
+      <img src="${session.product_cover}" alt="">
+      <div class="product-info">
+        <div class="product-name">${session.product_name}</div>
+        <div class="product-price">¥${session.product_price}</div>
+      </div>
+      <div class="product-actions">
+        <button onclick="sendProductCard(${sessionId}, ${session.product_id})">发送商品</button>
+        <button onclick="viewUserOrders(${session.user_id})">查看订单</button>
+      </div>
+    </div>
+    ` : ''}
+    <div class="message-list" id="messageList"></div>
+    <div class="input-area">
+      <div class="input-toolbar">
+        <button class="toolbar-btn" onclick="sendProductCard(${sessionId}, ${session.product_id || 0})">📦 发送商品</button>
+        <button class="toolbar-btn" onclick="viewUserOrders(${session.user_id})">📋 查看订单</button>
+      </div>
+      <div class="input-wrap">
+        <textarea id="messageInput" placeholder="请输入回复消息..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}"></textarea>
+        <button onclick="sendMessage()">发送</button>
+      </div>
+    </div>
+  `;
+  // 更新聊天区域的头像显示
+  updateServiceAvatars();
+  await loadMessages(sessionId);
+}
+
+async function loadMessages(sessionId) {
+  try {
+    const messages = await chatApi('GET', `/chat/session/${sessionId}/messages`);
+    renderMessages(messages);
+  } catch (e) {}
+}
+
+function renderMessages(messages) {
+  const listEl = document.getElementById('messageList');
+  if (!listEl) return;
+  const defaultUserAvatar = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22%3E%3Crect width=%2240%22 height=%2240%22 fill=%22%23e0e0e0%22/%3E%3Ctext x=%2220%22 y=%2224%22 font-size=%2212%22 text-anchor=%22middle%22 fill=%22%23999%22%3E用户%3C/text%3E%3C/svg%3E';
+  const defaultAdminAvatar = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22%3E%3Crect width=%2240%22 height=%2240%22 fill=%22%23667eea%22/%3E%3Ctext x=%2220%22 y=%2224%22 font-size=%2212%22 text-anchor=%22middle%22 fill=%22%23fff%22%3E客服%3C/text%3E%3C/svg%3E';
+  listEl.innerHTML = messages.map(m => {
+    const isUser = m.sender_type === 1;
+    let avatar = isUser ? m.sender_avatar : (currentAdminInfo && currentAdminInfo.avatar ? currentAdminInfo.avatar : m.admin_avatar);
+    if (avatar && avatar.startsWith('/')) avatar = window.location.origin + avatar;
+    let content = '';
+    if (m.content_type === 'text') content = `<div class="message-bubble">${escapeHtml(m.content)}</div>`;
+    else if (m.content_type === 'product') {
+      const product = JSON.parse(m.extra_data || '{}');
+      content = `<div class="product-msg" onclick="viewProduct(${product.id})"><img src="${product.cover}" alt=""><div class="name">${product.name}</div><div class="price">¥${product.price}</div></div>`;
+    }
+    const finalAvatar = avatar || (isUser ? defaultUserAvatar : defaultAdminAvatar);
+    return `<div class="message-item ${isUser ? 'user' : ''}">${isUser ? '' : `<img class="message-avatar" src="${finalAvatar}" alt="">`}<div class="message-content">${content}<div class="message-time">${formatTime(m.created_at)}</div></div>${isUser ? `<img class="message-avatar" src="${finalAvatar}" alt="">` : ''}</div>`;
+  }).join('');
+  listEl.scrollTop = listEl.scrollHeight;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+async function sendMessage() {
+  if (!currentSessionId) return;
+  const input = document.getElementById('messageInput');
+  const content = input.value.trim();
+  if (!content) return;
+  input.value = '';
+  try {
+    await chatApi('POST', '/chat/admin/send', { sessionId: currentSessionId, content });
+    await loadMessages(currentSessionId);
+    await loadSessions();
+  } catch (e) { showToast('发送失败', 'error'); }
+}
+
+async function sendProductCard(sessionId, productId) {
+  if (!sessionId || !productId) { showToast('暂无关联商品', 'error'); return; }
+  try {
+    await chatApi('POST', '/chat/admin/send-product', { sessionId, productId });
+    await loadMessages(sessionId);
+  } catch (e) { showToast('发送失败', 'error'); }
+}
+
+async function closeSession(sessionId) {
+  if (!confirm('确定要结束该会话吗？')) return;
+  try {
+    await chatApi('PUT', `/chat/session/${sessionId}/close`);
+    currentSessionId = null;
+    document.getElementById('chatArea').innerHTML = '<div class="empty-state">请选择左侧会话开始服务</div>';
+    await loadSessions();
+  } catch (e) { showToast('关闭会话失败', 'error'); }
+}
+
+function viewUserOrders(userId) { switchPage('orders'); loadOrders(1, userId); }
+
+function startServicePolling() {
+  servicePollingTimer = setInterval(() => {
+    loadSessions();
+    if (currentSessionId) loadMessages(currentSessionId);
+  }, 3000);
+}
+
+function stopServicePolling() {
+  if (servicePollingTimer) { clearInterval(servicePollingTimer); servicePollingTimer = null; }
+}
+
+// ==================== 超级管理员查看子用户统计 ====================
+async function loadServiceAdminStats() {
+  try {
+    // 显示管理员视图，隐藏客服视图
+    document.getElementById('service-admin-view').classList.remove('hide');
+    document.getElementById('service-staff-view').classList.add('hide');
+    
+    const list = await chatApi('GET', '/chat/admin/stats');
+    const tbody = document.getElementById('serviceAdminTableBody');
+    
+    if (list.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #999;">暂无子用户</td></tr>';
+      return;
+    }
+    
+    tbody.innerHTML = list.map(s => `
+      <tr>
+        <td>${s.id}</td>
+        <td>${s.avatar ? '<img class="product-thumb" src="'+s.avatar+'">' : '-'}</td>
+        <td>${s.nickname || s.username}</td>
+        <td>${s.customer_count}</td>
+        <td>${s.total_messages}</td>
+        <td>${s.today_messages}</td>
+        <td><span class="status-tag ${s.status==1?'active':'inactive'}">${s.status==1?'在线':'离线'}</span></td>
+        <td><button class="btn btn-primary btn-sm" onclick="viewStaffChat(${s.id}, '${s.nickname || s.username}')">查看聊天记录</button></td>
+      </tr>
+    `).join('');
+  } catch (e) {
+    showToast('加载客服统计失败', 'error');
+  }
+}
+
+// 查看指定客服的聊天记录
+let currentStaffId = null;
+async function viewStaffChat(staffId, staffName) {
+  currentStaffId = staffId;
+  document.getElementById('staffChatTitle').textContent = `客服「${staffName}」的聊天详情`;
+  document.getElementById('staffChatModal').classList.remove('hide');
+  
+  try {
+    // 加载该客服服务的客户列表
+    const customers = await chatApi('GET', `/chat/admin/${staffId}/customers`);
+    const listEl = document.getElementById('staffCustomerList');
+    
+    if (customers.length === 0) {
+      listEl.innerHTML = '<div style="color: #999; text-align: center; padding: 20px;">暂无服务客户</div>';
+      document.getElementById('staffChatHeader').innerHTML = '<span style="color: #999;">该客服暂无聊天记录</span>';
+      document.getElementById('staffChatMessages').innerHTML = '';
+      return;
+    }
+    
+    listEl.innerHTML = customers.map(c => `
+      <div class="session-item" onclick="loadStaffCustomerMessages(${c.session_id}, '${c.nickname || '用户'+c.user_id}', '${c.avatar || ''}')" style="cursor: pointer; padding: 12px; border-bottom: 1px solid #f0f0f0;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <img src="${c.avatar || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22%3E%3Crect width=%2240%22 height=%2240%22 fill=%22%23e0e0e0%22/%3E%3Ctext x=%2220%22 y=%2225%22 font-size=%2212%22 text-anchor=%22middle%22 fill=%22%23999%22%3E用户%3C/text%3E%3C/svg%3E'}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+          <div style="flex: 1;">
+            <div style="font-weight: 500; color: #333;">${c.nickname || '用户'+c.user_id}</div>
+            <div style="font-size: 12px; color: #999; margin-top: 4px;">${c.message_count} 条消息</div>
+          </div>
+        </div>
+        <div style="font-size: 12px; color: #bbb; margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${c.last_message || '暂无消息'}</div>
+      </div>
+    `).join('');
+    
+    // 默认加载第一个客户的聊天记录
+    if (customers.length > 0) {
+      loadStaffCustomerMessages(customers[0].session_id, customers[0].nickname || '用户'+customers[0].user_id, customers[0].avatar);
+    }
+  } catch (e) {
+    showToast('加载客户列表失败', 'error');
+  }
+}
+
+// 加载指定客服与指定客户的聊天记录
+async function loadStaffCustomerMessages(sessionId, customerName, customerAvatar) {
+  try {
+    document.getElementById('staffChatHeader').innerHTML = `
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <img src="${customerAvatar || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22%3E%3Crect width=%2232%22 height=%2232%22 fill=%22%23e0e0e0%22/%3E%3Ctext x=%2216%22 y=%2220%22 font-size=%2210%22 text-anchor=%22middle%22 fill=%22%23999%22%3E用户%3C/text%3E%3C/svg%3E'}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+        <span style="font-weight: 500;">${customerName}</span>
+      </div>
+    `;
+    
+    const messages = await chatApi('GET', `/chat/admin/session/${sessionId}/messages`);
+    const messagesEl = document.getElementById('staffChatMessages');
+    
+    if (messages.length === 0) {
+      messagesEl.innerHTML = '<div style="text-align: center; color: #999; padding: 40px;">暂无聊天记录</div>';
+      return;
+    }
+    
+    const defaultUserAvatar = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2236%22 height=%2236%22%3E%3Crect width=%2236%22 height=%2236%22 fill=%22%23e0e0e0%22/%3E%3Ctext x=%2218%22 y=%2222%22 font-size=%2211%22 text-anchor=%22middle%22 fill=%22%23999%22%3E用户%3C/text%3E%3C/svg%3E';
+    const defaultAdminAvatar = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2236%22 height=%2236%22%3E%3Crect width=%2236%22 height=%2236%22 fill=%22%23667eea%22/%3E%3Ctext x=%2218%22 y=%2222%22 font-size=%2211%22 text-anchor=%22middle%22 fill=%22%23fff%22%3E客服%3C/text%3E%3C/svg%3E';
+    
+    messagesEl.innerHTML = messages.map(m => {
+      const isUser = m.sender_type === 1;
+      const avatar = isUser ? (m.user_avatar || defaultUserAvatar) : (m.admin_avatar || defaultAdminAvatar);
+      const name = isUser ? (m.user_name || '用户') : (m.admin_name || '客服');
+      const time = new Date(m.created_at).toLocaleString('zh-CN');
+      
+      return `
+        <div style="display: flex; margin-bottom: 16px; ${isUser ? 'flex-direction: row-reverse;' : ''}">
+          <img src="${avatar}" style="width: 36px; height: 36px; border-radius: 50%; margin: ${isUser ? '0 0 0 10px' : '0 10px 0 0'}; object-fit: cover;">
+          <div style="max-width: 70%;">
+            <div style="font-size: 12px; color: #999; margin-bottom: 4px; text-align: ${isUser ? 'right' : 'left'};">${name} · ${time}</div>
+            <div style="padding: 10px 14px; border-radius: 8px; font-size: 14px; line-height: 1.5; word-break: break-all; ${isUser ? 'background: #667eea; color: #fff;' : 'background: #fff; border: 1px solid #e8e8e8;'}">${escapeHtml(m.content)}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+    
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  } catch (e) {
+    showToast('加载聊天记录失败', 'error');
+  }
+}
+
+function closeStaffChatModal() {
+  document.getElementById('staffChatModal').classList.add('hide');
+  currentStaffId = null;
+}
+
+// ==================== 客服个人信息 ====================
+let spAvatarFile = null;
+let spAvatarUrl = '';
+
+function openServiceProfileModal() {
+  console.log('openServiceProfileModal called, currentAdminInfo:', currentAdminInfo);
+  if (!currentAdminInfo) {
+    showToast('客服信息加载中，请稍后重试', 'error');
+    // 尝试重新加载客服信息
+    loadServiceAdminInfo().then(() => {
+      if (currentAdminInfo) {
+        openServiceProfileModal();
+      }
+    });
+    return;
+  }
+  document.getElementById('spNickname').value = currentAdminInfo.nickname || '';
+  // 重置头像
+  spAvatarFile = null;
+  spAvatarUrl = '';
+  const preview = document.getElementById('spAvatarPreview');
+  const avatarSrc = currentAdminInfo.avatar || '';
+  if (avatarSrc) {
+    preview.innerHTML = '';
+    preview.style.backgroundImage = `url(${avatarSrc})`;
+    preview.style.backgroundSize = 'cover';
+    preview.style.backgroundPosition = 'center';
+  } else {
+    preview.innerHTML = '<span style="font-size: 24px;">+</span><p style="font-size: 11px;">上传头像</p>';
+    preview.style.backgroundImage = '';
+  }
+  document.getElementById('serviceProfileModal').classList.remove('hide');
+}
+function closeServiceProfileModal() { document.getElementById('serviceProfileModal').classList.add('hide'); }
+
+// 处理客服头像上传
+function handleServiceAvatarUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  
+  if (!file.type.startsWith('image/')) {
+    showToast('请选择图片文件', 'error');
+    return;
+  }
+  
+  if (file.size > 2 * 1024 * 1024) {
+    showToast('图片大小不能超过2MB', 'error');
+    return;
+  }
+  
+  spAvatarFile = file;
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const preview = document.getElementById('spAvatarPreview');
+    preview.innerHTML = '';
+    preview.style.backgroundImage = `url(${e.target.result})`;
+    preview.style.backgroundSize = 'cover';
+    preview.style.backgroundPosition = 'center';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function saveServiceProfile() {
+  const nickname = document.getElementById('spNickname').value.trim();
+  try {
+    // 如果有头像文件，先上传
+    let avatarUrl = currentAdminInfo.avatar || '';
+    if (spAvatarFile) {
+      const formData = new FormData();
+      formData.append('image', spAvatarFile);
+      const uploadRes = await fetch('/api/upload/image', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: formData
+      }).then(r => r.json());
+      
+      if (uploadRes.code === 200) {
+        avatarUrl = uploadRes.data.url;
+      }
+    }
+    
+    await api('PUT', '/profile', { nickname, avatar: avatarUrl });
+    showToast('保存成功');
+    closeServiceProfileModal();
+    
+    // 更新当前管理员信息
+    currentAdminInfo.avatar = avatarUrl;
+    currentAdminInfo.nickname = nickname;
+    
+    // 更新所有显示的头像
+    updateServiceAvatars();
+  } catch (e) { showToast('保存失败', 'error'); }
+}
+
+// 更新所有客服头像显示
+function updateServiceAvatars() {
+  if (!currentAdminInfo) return;
+  const avatarUrl = currentAdminInfo.avatar || '/images/default-avatar.png';
+  // 更新顶部header头像
+  const headerAvatar = document.getElementById('headerAvatar');
+  if (headerAvatar) {
+    headerAvatar.src = avatarUrl;
+  }
+  // 更新侧边栏头像
+  const serviceAdminAvatar = document.getElementById('serviceAdminAvatar');
+  if (serviceAdminAvatar) {
+    serviceAdminAvatar.src = avatarUrl;
+  }
+  document.getElementById('serviceAdminName').textContent = currentAdminInfo.nickname || '客服';
+  // 更新聊天区域右上角头像
+  const chatHeaderAvatar = document.getElementById('chatHeaderAvatar');
+  if (chatHeaderAvatar) {
+    chatHeaderAvatar.src = avatarUrl;
+  }
+}
+
+// ==================== 客户信息设置面板 ====================
+function openSettings() {
+  document.getElementById('settingsPanel').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+  loadCustomerInfo();
+}
+function closeSettings() {
+  document.getElementById('settingsPanel').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+async function loadCustomerInfo() {
+  if (!currentSessionId) return;
+  const session = sessions.find(s => s.id === currentSessionId);
+  if (!session) return;
+  try {
+    const userInfo = await api('GET', `/user/${session.user_id}/info`);
+    document.getElementById('cUserId').textContent = session.user_id;
+    document.getElementById('cNickname').textContent = userInfo.nickname || '-';
+    document.getElementById('cRegTime').textContent = userInfo.created_at ? userInfo.created_at.split(' ')[0] : '-';
+    document.getElementById('cPhone').textContent = userInfo.phone || '-';
+    const stats = await chatApi('GET', `/chat/user/${session.user_id}/stats`);
+    document.getElementById('statOrders').textContent = stats.order_count || 0;
+    document.getElementById('statTotal').textContent = '¥' + (stats.total_spent || 0);
+    document.getElementById('statSessions').textContent = stats.session_count || 0;
+  } catch (e) {}
+}
+
+// ==================== 管理员/客服管理 ====================
+async function loadAdmins() {
+  try {
+    const list = await api('GET', '/admin/list');
+    // 只显示非超级管理员（客服和其他角色）
+    const filteredList = list.filter(a => a.role !== 'super');
+    document.getElementById('adminTableBody').innerHTML = filteredList.map(a => `<tr>
+      <td>${a.id}</td>
+      <td>${a.avatar ? '<img class="product-thumb" src="'+a.avatar+'">' : '-'}</td>
+      <td>${a.username}</td>
+      <td>${a.nickname || '-'}</td>
+      <td>${a.role === 'other' ? '其他' : '客服'}</td>
+      <td><span class="status-tag ${a.status==1?'active':'inactive'}">${a.status==1?'正常':'禁用'}</span></td>
+      <td>${a.created_at || '-'}</td>
+      <td><button class="btn btn-danger btn-sm" onclick="deleteAdmin(${a.id})">删除</button></td>
+    </tr>`).join('');
+  } catch (e) {}
+}
+async function loadSuperAdmins() {
+  try {
+    const list = await api('GET', '/admin/list');
+    // 只显示超级管理员
+    const filteredList = list.filter(a => a.role === 'super');
+    document.getElementById('superAdminTableBody').innerHTML = filteredList.map(a => `<tr>
+      <td>${a.id}</td>
+      <td>${a.avatar ? '<img class="product-thumb" src="'+a.avatar+'">' : '-'}</td>
+      <td>${a.username}</td>
+      <td>${a.nickname || '-'}</td>
+      <td>超级管理员</td>
+      <td><span class="status-tag ${a.status==1?'active':'inactive'}">${a.status==1?'正常':'禁用'}</span></td>
+      <td>${a.created_at || '-'}</td>
+      <td>-</td>
+    </tr>`).join('');
+  } catch (e) {}
+}
+async function loadPermissionGroupsForSelect() {
+  try {
+    const list = await api('GET', '/permission-group/list');
+    const select = document.getElementById('aPermissionGroup');
+    select.innerHTML = '<option value="">请选择权限组</option>' + list.map(pg => `<option value="${pg.id}">${pg.name}</option>`).join('');
+  } catch (e) {}
+}
+// 客服头像文件
+let adminAvatarFile = null;
+let adminAvatarUrl = '';
+
+function showAdminModal() {
+  document.getElementById('adminModal').classList.remove('hide');
+  document.getElementById('aUsername').value = '';
+  document.getElementById('aPassword').value = '';
+  document.getElementById('aNickname').value = '';
+  document.getElementById('aRole').value = 'service';
+  document.getElementById('aPermissionGroup').value = '';
+  // 重置头像
+  adminAvatarFile = null;
+  adminAvatarUrl = '';
+  document.getElementById('adminAvatarPreview').innerHTML = '<span style="font-size: 24px;">+</span><p style="font-size: 11px;">上传头像</p>';
+  document.getElementById('adminAvatarPreview').style.backgroundImage = '';
+  loadPermissionGroupsForSelect();
+}
+function closeAdminModal() { document.getElementById('adminModal').classList.add('hide'); }
+
+// 处理客服头像上传
+function handleAdminAvatarUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  
+  // 验证文件类型
+  if (!file.type.startsWith('image/')) {
+    showToast('请选择图片文件', 'error');
+    return;
+  }
+  
+  // 验证文件大小 (最大 2MB)
+  if (file.size > 2 * 1024 * 1024) {
+    showToast('图片大小不能超过2MB', 'error');
+    return;
+  }
+  
+  adminAvatarFile = file;
+  
+  // 预览图片
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const preview = document.getElementById('adminAvatarPreview');
+    preview.innerHTML = '';
+    preview.style.backgroundImage = `url(${e.target.result})`;
+    preview.style.backgroundSize = 'cover';
+    preview.style.backgroundPosition = 'center';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function saveAdmin() {
+  const username = document.getElementById('aUsername').value.trim();
+  const password = document.getElementById('aPassword').value;
+  const nickname = document.getElementById('aNickname').value.trim();
+  const role = document.getElementById('aRole').value;
+  const permission_group_id = document.getElementById('aPermissionGroup').value || null;
+  
+  if (!username || !password) return showToast('请填写用户名和密码', 'error');
+  if (password.length < 6) return showToast('密码至少6位', 'error');
+  
+  try {
+    // 如果有头像文件，先上传
+    if (adminAvatarFile) {
+      const formData = new FormData();
+      formData.append('image', adminAvatarFile);
+      const uploadRes = await fetch('/api/upload/image', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: formData
+      }).then(r => r.json());
+      
+      if (uploadRes.code === 200) {
+        adminAvatarUrl = uploadRes.data.url;
+      }
+    }
+    
+    const data = { 
+      username, 
+      password, 
+      nickname, 
+      role, 
+      permission_group_id,
+      avatar: adminAvatarUrl
+    };
+    
+    await api('POST', '/admin/create', data);
+    showToast('创建成功');
+    closeAdminModal();
+    loadAdmins();
+  } catch (e) { 
+    console.error('创建失败', e);
+    showToast('创建失败', 'error'); 
+  }
+}
+async function deleteAdmin(id) {
+  if (!confirm('确定删除该管理员/客服？')) return;
+  try {
+    await api('DELETE', '/admin/delete', { id });
+    showToast('删除成功');
+    loadAdmins();
+  } catch (e) { showToast('删除失败', 'error'); }
+}
+
+// ==================== 权限组管理 ====================
+const ALL_PERMISSIONS = [
+  { value: 'dashboard', label: '数据统计' },
+  { value: 'products', label: '商品管理' },
+  { value: 'categories', label: '分类管理' },
+  { value: 'orders', label: '订单管理' },
+  { value: 'users', label: '用户管理' },
+  { value: 'express', label: '快递管理' },
+  { value: 'banners', label: '轮播管理' },
+  { value: 'service', label: '客服聊天' }
+];
+
+// 获取权限显示名称
+function getPermissionLabel(permValue) {
+  const perm = ALL_PERMISSIONS.find(p => p.value === permValue);
+  return perm ? perm.label : permValue;
+}
+
+async function loadPermissionGroups() {
+  try {
+    const list = await api('GET', '/permission-group/list');
+    document.getElementById('permissionGroupTableBody').innerHTML = list.map(pg => {
+      // 确保 permissions 是数组
+      let perms = pg.permissions;
+      if (typeof perms === 'string') {
+        try { perms = JSON.parse(perms); } catch { perms = []; }
+      }
+      if (!Array.isArray(perms)) perms = [];
+      
+      const permLabels = perms.map(p => getPermissionLabel(p)).filter(Boolean);
+      const permJson = JSON.stringify(perms).replace(/"/g, '&quot;');
+      return `<tr>
+        <td>${pg.id}</td>
+        <td>${pg.name}</td>
+        <td>${permLabels.length > 0 ? permLabels.map(l => `<span class="permission-tag">${l}</span>`).join(' ') : '<span style="color:#999">无权限</span>'}</td>
+        <td>${pg.created_at ? pg.created_at.substring(0, 10) : '-'}</td>
+        <td>
+          <button class="btn btn-primary btn-sm" onclick="editPermissionGroup(${pg.id}, '${pg.name}', ${permJson})">编辑</button>
+          <button class="btn btn-danger btn-sm" onclick="deletePermissionGroup(${pg.id})">删除</button>
+        </td>
+      </tr>`;
+    }).join('');
+  } catch (e) { console.error('加载权限组失败', e); }
+}
+
+function showPermissionGroupModal() {
+  document.getElementById('permissionGroupModal').classList.remove('hide');
+  document.getElementById('pgModalTitle').textContent = '新增权限组';
+  document.getElementById('pgId').value = '';
+  document.getElementById('pgName').value = '';
+  document.querySelectorAll('input[name="pgPermission"]').forEach(cb => cb.checked = false);
+}
+
+function closePermissionGroupModal() {
+  document.getElementById('permissionGroupModal').classList.add('hide');
+}
+
+function editPermissionGroup(id, name, permissions) {
+  document.getElementById('permissionGroupModal').classList.remove('hide');
+  document.getElementById('pgModalTitle').textContent = '编辑权限组';
+  document.getElementById('pgId').value = id;
+  document.getElementById('pgName').value = name;
+  
+  // 确保 permissions 是数组
+  let perms = permissions;
+  if (typeof perms === 'string') {
+    try { perms = JSON.parse(perms); } catch { perms = []; }
+  }
+  if (!Array.isArray(perms)) perms = [];
+  
+  document.querySelectorAll('input[name="pgPermission"]').forEach(cb => {
+    cb.checked = perms.includes(cb.value);
+  });
+}
+
+async function savePermissionGroup() {
+  const id = document.getElementById('pgId').value;
+  const name = document.getElementById('pgName').value;
+  const permissions = Array.from(document.querySelectorAll('input[name="pgPermission"]:checked')).map(cb => cb.value);
+
+  if (!name) return showToast('请填写权限组名称', 'error');
+
+  try {
+    if (id) {
+      await api('PUT', '/permission-group/update', { id, name, permissions });
+    } else {
+      await api('POST', '/permission-group/create', { name, permissions });
+    }
+    showToast('保存成功');
+    closePermissionGroupModal();
+    loadPermissionGroups();
+  } catch (e) { showToast('保存失败', 'error'); }
+}
+
+async function deletePermissionGroup(id) {
+  if (!confirm('确定删除该权限组？')) return;
+  try {
+    await api('DELETE', '/permission-group/delete', { id });
+    showToast('删除成功');
+    loadPermissionGroups();
+  } catch (e) { showToast('删除失败', 'error'); }
+}
+
+// ==================== 个人设置 ====================
+async function loadProfile() {
+  try {
+    const data = await api('GET', '/info');
+    document.getElementById('profileId').value = data.id;
+    document.getElementById('profileUsername').value = data.username;
+    document.getElementById('profileRole').value = data.role === 'super' ? '超级管理员' : '客服';
+    document.getElementById('profileNickname').value = data.nickname || '';
+    document.getElementById('profileAvatar').value = data.avatar || '';
+  } catch (e) {}
+}
+async function saveProfile() {
+  const data = {
+    nickname: document.getElementById('profileNickname').value,
+    avatar: document.getElementById('profileAvatar').value
+  };
+  try {
+    await api('PUT', '/profile', data);
+    showToast('保存成功');
+    // 更新顶部显示的名称
+    document.getElementById('adminName').textContent = data.nickname || document.getElementById('profileUsername').value;
+  } catch (e) { showToast('保存失败', 'error'); }
+}
+function showChangePasswordModal() {
+  document.getElementById('changePasswordModal').classList.remove('hide');
+  document.getElementById('oldPassword').value = '';
+  document.getElementById('newPassword').value = '';
+  document.getElementById('confirmPassword').value = '';
+}
+function closeChangePasswordModal() {
+  document.getElementById('changePasswordModal').classList.add('hide');
+}
+async function saveChangePassword() {
+  const oldPassword = document.getElementById('oldPassword').value;
+  const newPassword = document.getElementById('newPassword').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
+  
+  if (!oldPassword || !newPassword || !confirmPassword) {
+    return showToast('请填写所有密码字段', 'error');
+  }
+  if (newPassword.length < 6) {
+    return showToast('新密码至少6位', 'error');
+  }
+  if (newPassword !== confirmPassword) {
+    return showToast('两次输入的新密码不一致', 'error');
+  }
+  
+  try {
+    await api('PUT', '/change-password', { oldPassword, newPassword });
+    showToast('密码修改成功，请重新登录');
+    closeChangePasswordModal();
+    setTimeout(doLogout, 1500);
+  } catch (e) { showToast('密码修改失败', 'error'); }
+}
+
 // ==================== 初始化 ====================
 if (token) {
   document.getElementById('loginPage').classList.add('hide');
   document.getElementById('adminPage').classList.remove('hide');
   api('GET', '/info').then(data => {
+    currentAdminInfo = data;
     document.getElementById('adminName').textContent = data.nickname || data.username;
+    // 更新所有头像显示
+    updateServiceAvatars();
+    
+    if (data.role === 'super') {
+      // 超级管理员：显示所有菜单（包括super-only）
+      document.querySelectorAll('.super-only').forEach(el => el.classList.remove('hide'));
+      // 确保所有普通菜单都显示
+      ['nav-dashboard', 'nav-products', 'nav-categories', 'nav-orders', 'nav-users', 'nav-express', 'nav-banners', 'nav-service', 'nav-profile'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('hide');
+      });
+      loadDashboard();
+    } else {
+      // 客服角色：只显示特定菜单
+      document.querySelectorAll('.super-only').forEach(el => el.classList.add('hide'));
+      document.getElementById('nav-dashboard').classList.add('hide');
+      document.getElementById('nav-categories').classList.add('hide');
+      document.getElementById('nav-orders').classList.add('hide');
+      document.getElementById('nav-users').classList.add('hide');
+      document.getElementById('nav-express').classList.add('hide');
+      document.getElementById('nav-banners').classList.add('hide');
+      // 确保客服能看到的菜单是显示的
+      document.getElementById('nav-products').classList.remove('hide');
+      document.getElementById('nav-service').classList.remove('hide');
+      document.getElementById('nav-profile').classList.remove('hide');
+      // 默认跳转到商品管理
+      document.getElementById('nav-products').click();
+    }
   }).catch(() => doLogout());
-  loadDashboard();
 }
 </script>
 </body>

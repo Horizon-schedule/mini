@@ -1,0 +1,70 @@
+<!-- 商品评价列表页 -->
+<view class="page-review-list">
+  <!-- 商品信息 -->
+  <view class="product-card card" wx:if="{{product}}">
+    <image class="product-cover" src="{{product.cover}}" mode="aspectFill"></image>
+    <view class="product-info">
+      <text class="product-name">{{product.name}}</text>
+      <text class="product-price">¥{{product.price}}</text>
+    </view>
+  </view>
+
+  <!-- 评价标签 -->
+  <view class="tags-bar">
+    <view class="tag-item {{activeTag === 'all' ? 'active' : ''}}" data-tag="all" bindtap="selectTag">
+      全部({{tags.length > 0 ? tags[0].count : 0}})
+    </view>
+    <view class="tag-item {{activeTag === 'good' ? 'active' : ''}}" data-tag="good" bindtap="selectTag">
+      好评
+    </view>
+    <view class="tag-item {{activeTag === 'hasImage' ? 'active' : ''}}" data-tag="hasImage" bindtap="selectTag">
+      有图
+    </view>
+    <view class="tag-item {{activeTag === 'repeat' ? 'active' : ''}}" data-tag="repeat" bindtap="selectTag">
+      回头客
+    </view>
+  </view>
+
+  <!-- 评价列表 -->
+  <view class="review-list">
+    <view class="review-item card" wx:for="{{reviews}}" wx:key="id">
+      <view class="review-header">
+        <image class="review-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
+        <view class="review-meta">
+          <text class="review-nickname">{{item.nickname}}</text>
+          <view class="review-rating">
+            <text wx:for="{{5}}" wx:for-item="star" wx:key="star">⭐</text>
+          </view>
+        </view>
+        <text class="review-date">{{item.date}}</text>
+      </view>
+      <text class="review-content">{{item.content}}</text>
+      <!-- 评价图片 -->
+      <view class="review-images" wx:if="{{item.images && item.images.length > 0}}">
+        <image 
+          wx:for="{{item.images}}" 
+          wx:for-item="img" 
+          wx:key="index"
+          src="{{img}}" 
+          mode="aspectFill"
+          data-urls="{{item.images}}"
+          data-current="{{img}}"
+          bindtap="previewImage"
+        ></image>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-more" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+  <view class="no-more" wx:if="{{!hasMore && reviews.length > 0}}">
+    <text>没有更多了</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{reviews.length === 0 && !loading}}">
+    <text>暂无评价</text>
+  </view>
+</view>

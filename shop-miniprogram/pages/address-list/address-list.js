@@ -1,4 +1,4 @@
-const { get, put, del } = require('../../utils/request');
+const { get, put, del, post } = require('../../utils/request');
 
 Page({
   data: { list: [], loading: false },
@@ -13,7 +13,75 @@ Page({
     } catch (err) { this.setData({ loading: false }); }
   },
 
-  addAddress() { wx.navigateTo({ url: '/pages/address-edit/address-edit' }); },
+  /**
+   * 新增收货地址
+   */
+  addAddress() {
+    wx.showActionSheet({
+      itemList: ['调用微信收货地址', '手动输入地址'],
+      success: (res) => {
+        if (res.tapIndex === 0) {
+          this.chooseWxAddress();
+        } else {
+          this.manualAddAddress();
+        }
+      }
+    });
+  },
+
+  /**
+   * 调用微信收货地址
+   */
+  chooseWxAddress() {
+    wx.chooseAddress({
+      success: (res) => {
+        const addressData = {
+          name: res.userName,
+          phone: res.telNumber,
+          province: res.provinceName,
+          city: res.cityName,
+          district: res.countyName,
+          detail: res.detailInfo,
+          is_default: this.data.list.length === 0 ? 1 : 0
+        };
+        this.saveAddress(addressData);
+      },
+      fail: (err) => {
+        if (err.errMsg && err.errMsg.includes('cancel')) return;
+        // API不可用时，提示手动输入
+        wx.showModal({
+          title: '提示',
+          content: '微信收货地址接口暂不可用，请选择手动输入',
+          confirmText: '手动输入',
+          success: (res) => {
+            if (res.confirm) {
+              this.manualAddAddress();
+            }
+          }
+        });
+      }
+    });
+  },
+
+  /**
+   * 手动添加地址
+   */
+  manualAddAddress() {
+    wx.navigateTo({ url: '/pages/address-edit/address-edit' });
+  },
+
+  /**
+   * 保存地址到后端
+   */
+  async saveAddress(data) {
+    try {
+      await post('/address/save', data, true);
+      wx.showToast({ title: '添加成功', icon: 'success' });
+      this.loadList();
+    } catch (err) {
+      wx.showToast({ title: '保存失败', icon: 'none' });
+    }
+  },
 
   editAddress(e) {
     const item = e.currentTarget.dataset.item;
